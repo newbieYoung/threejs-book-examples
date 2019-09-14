@@ -393,14 +393,14 @@ THREE.OrbitControls = function (object, domElement) {
         targetDistance *= Math.tan((scope.object.fov / 2) * Math.PI / 180.0);
 
         // we use only clientHeight here so aspect ratio does not distort speed
-        panLeft(2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix);
-        panUp(2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix);
+        panLeft(2 * deltaX * targetDistance / element.height, scope.object.matrix);
+        panUp(2 * deltaY * targetDistance / element.height, scope.object.matrix);
 
       } else if (scope.object.isOrthographicCamera) {
 
         // orthographic
-        panLeft(deltaX * (scope.object.right - scope.object.left) / scope.object.zoom / element.clientWidth, scope.object.matrix);
-        panUp(deltaY * (scope.object.top - scope.object.bottom) / scope.object.zoom / element.clientHeight, scope.object.matrix);
+        panLeft(deltaX * (scope.object.right - scope.object.left) / scope.object.zoom / element.width, scope.object.matrix);
+        panUp(deltaY * (scope.object.top - scope.object.bottom) / scope.object.zoom / element.height, scope.object.matrix);
 
       } else {
 
@@ -486,9 +486,9 @@ THREE.OrbitControls = function (object, domElement) {
 
     var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
-    rotateLeft(2 * Math.PI * rotateDelta.x / element.clientHeight); // yes, height
+    rotateLeft(2 * Math.PI * rotateDelta.x / element.height); // yes, height
 
-    rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight);
+    rotateUp(2 * Math.PI * rotateDelta.y / element.height);
 
     rotateStart.copy(rotateEnd);
 
@@ -674,9 +674,9 @@ THREE.OrbitControls = function (object, domElement) {
 
     var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
-    rotateLeft(2 * Math.PI * rotateDelta.x / element.clientHeight); // yes, height
+    rotateLeft(2 * Math.PI * rotateDelta.x / element.height); // yes, height
 
-    rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight);
+    rotateUp(2 * Math.PI * rotateDelta.y / element.height);
 
     rotateStart.copy(rotateEnd);
 
