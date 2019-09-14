@@ -1,5 +1,5 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
-import BasicRubik from './Rubik.js'
+import Rubik from './Rubik.js'
 import '../plugin/OrbitControls.js'
 const Context = canvas.getContext('webgl');
 
@@ -72,7 +72,7 @@ export default class Main {
    * 初始化物体
    */
   initObject() {
-    var rubik = new BasicRubik(this);
+    var rubik = new Rubik(this);
     rubik.model();
   }
 
