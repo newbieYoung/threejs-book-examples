@@ -1,8 +1,10 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
+import BasicRubik from './Rubik.js'
+import '../plugin/OrbitControls.js'
 const Context = canvas.getContext('webgl');
 
 /**
- * 小游戏主逻辑类
+ * 游戏主函数
  */
 export default class Main {
   constructor() {
@@ -20,6 +22,9 @@ export default class Main {
     this.render();
   }
 
+  /**
+   * 初始化渲染器
+   */
   initRender() {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -32,27 +37,48 @@ export default class Main {
     this.renderer.setPixelRatio(this.devicePixelRatio);
   }
 
+  /**
+   * 初始化相机
+   */
   initCamera() {
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1500);
     this.camera.position.set(0, 0, 300 / this.camera.aspect);
     this.camera.up.set(0, 1, 0); //正方向
     this.camera.lookAt(this.viewCenter);
 
+    //轨道视角控制器
+    this.orbitController = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+    this.orbitController.enableZoom = false;
+    this.orbitController.rotateSpeed = 2;
+    this.orbitController.target = this.viewCenter;//设置控制点
   }
 
+  /**
+   * 初始化场景
+   */
   initScene() {
     this.scene = new THREE.Scene();
   }
 
+  /**
+   * 初始化光线
+   */
   initLight() {
     this.light = new THREE.AmbientLight(0xfefefe);
     this.scene.add(this.light);
   }
 
+  /**
+   * 初始化物体
+   */
   initObject() {
-    //...
+    var rubik = new BasicRubik(this);
+    rubik.model();
   }
 
+  /**
+   * 渲染
+   */
   render() {
     this.renderer.clear();
     this.renderer.render(this.scene, this.camera);
