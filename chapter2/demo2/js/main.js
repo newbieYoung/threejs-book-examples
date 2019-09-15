@@ -50,7 +50,7 @@ export default class Main {
     this.orbitController = new THREE.OrbitControls(this.camera, this.renderer.domElement);
     this.orbitController.enableZoom = false;
     this.orbitController.rotateSpeed = 2;
-    this.orbitController.target = this.viewCenter;//设置控制点
+    this.orbitController.target = this.viewCenter; //设置控制点
   }
 
   /**

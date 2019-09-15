@@ -10,7 +10,8 @@ const BasicParams = {
   //右、左、上、下、前、后
   colors: ['#ff6b02', '#dd422f',
     '#ffffff', '#fdcd02',
-    '#3d81f7', '#019d53']
+    '#3d81f7', '#019d53'
+  ]
 };
 
 /**
@@ -31,7 +32,9 @@ function SimpleCube(x, y, z, num, len, colors) {
   for (var i = 0; i < colors.length; i++) {
     var texture = new THREE.Texture(faces(colors[i]));
     texture.needsUpdate = true;
-    var material = new THREE.MeshLambertMaterial({ map: texture });
+    var material = new THREE.MeshLambertMaterial({
+      map: texture
+    });
     materialArr.push(material);
   }
 
