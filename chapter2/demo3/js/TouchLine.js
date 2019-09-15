@@ -8,7 +8,7 @@ export default class TouchLine {
     this.radio = this.main.originWidth / 750;
     this.uiRadio = this.main.uiRadio;
     this.setSize(750, 64);
-    this.loadImage('images/touch-line.png')    
+    this.loadImage('images/touch-line.png')
   }
 
   /**
@@ -19,7 +19,10 @@ export default class TouchLine {
     var loader = new THREE.TextureLoader();
     loader.load(url, function (texture) {
       var geometry = new THREE.PlaneBufferGeometry(self.width, self.height);
-      var material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+      var material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true
+      });
       self.plane = new THREE.Mesh(geometry, material);
       self.defaultPosition();
       self.showInScene();
@@ -114,10 +117,9 @@ export default class TouchLine {
    * 判断元素是否获得焦点
    */
   isHover(touch) {
-    var isHover = false;
     if (touch.clientY >= this.screenRect.top && touch.clientY <= this.screenRect.top + this.screenRect.height && touch.clientX >= this.screenRect.left && touch.clientX <= this.screenRect.left + this.screenRect.width) {
-      isHover = true;
+      return true;
     }
-    return isHover;
+    return false;
   }
 }
