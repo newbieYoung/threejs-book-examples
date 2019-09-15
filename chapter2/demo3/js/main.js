@@ -13,6 +13,9 @@ export default class Main {
     this.height = window.innerHeight;
     this.devicePixelRatio = window.devicePixelRatio;
     this.viewCenter = new THREE.Vector3(0, 0, 0); //原点
+    this.frontViewName = 'front-rubik'; //正视角魔方名称
+    this.endViewName = 'end-rubik'; //反视角魔方名称
+    this.minPercent = 0.25; //正反视图至少占25%区域
 
     this.initRender();
     this.initCamera();
@@ -51,6 +54,10 @@ export default class Main {
     this.orbitController.enableZoom = false;
     this.orbitController.rotateSpeed = 2;
     this.orbitController.target = this.viewCenter; //设置控制点
+
+    //透视投影相机视角为垂直视角，根据视角可以求出原点所在裁切面的高度，然后已知高度和宽高比可以计算出宽度
+    this.originHeight = Math.tan(22.5 / 180 * Math.PI) * this.camera.position.z * 2;
+    this.originWidth = this.originHeight * this.camera.aspect;
   }
 
   /**
@@ -72,8 +79,15 @@ export default class Main {
    * 初始化物体
    */
   initObject() {
-    var rubik = new Rubik(this);
-    rubik.model();
+    //正视角魔方
+    this.frontRubik = new Rubik(this);
+    this.frontRubik.model(this.frontViewName);
+    this.frontRubik.resizeHeight(0.5, 1);
+
+    //反视角魔方
+    this.endRubik = new Rubik(this);
+    this.endRubik.model(this.endViewName);
+    this.endRubik.resizeHeight(0.5, -1);
   }
 
   /**

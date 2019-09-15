@@ -81,12 +81,33 @@ export default class Rubik {
     this.main = main;
   }
 
-  model() {
+  model(type) {
+    this.group = new THREE.Group();
+    this.group.childType = type;
+
     //生成魔方小正方体
     this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, BasicParams.num, BasicParams.len, BasicParams.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
-      this.main.scene.add(item);
+
+      /**
+       * 小方块不再直接加入场景了；
+       * 而是先加入魔方集合，然后再把魔方集合加入场景。
+       */
+      //this.main.scene.add(item);
+      this.group.add(item);
     }
+    this.main.scene.add(this.group);
+  }
+
+  resizeHeight(percent, transformTag) {
+    if (percent < this.main.minPercent) {
+      percent = this.main.minPercent;
+    }
+    if (percent > (1 - this.main.minPercent)) {
+      percent = 1 - this.main.minPercent;
+    }
+    this.group.scale.set(percent, percent, percent);
+    this.group.position.y = this.main.originHeight * (0.5 - percent / 2) * transformTag;
   }
 }
