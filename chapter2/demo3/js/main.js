@@ -13,8 +13,8 @@ export default class Main {
     this.height = window.innerHeight;
     this.devicePixelRatio = window.devicePixelRatio;
     this.viewCenter = new THREE.Vector3(0, 0, 0); //原点
-    this.frontViewName = 'front-rubik'; //正视角魔方名称
-    this.endViewName = 'end-rubik'; //反视角魔方名称
+    this.frontViewName = 'front-rubik'; //正视图魔方名称
+    this.endViewName = 'end-rubik'; //反视图魔方名称
     this.minPercent = 0.25; //正反视图至少占25%区域
 
     this.initRender();
@@ -77,11 +77,11 @@ export default class Main {
    * 初始化物体
    */
   initObject() {
-    //正视角魔方
+    //正视图魔方
     this.frontRubik = new Rubik(this);
     this.frontRubik.model(this.frontViewName);
 
-    //反视角魔方
+    //反视图魔方
     this.endRubik = new Rubik(this);
     this.endRubik.model(this.endViewName);
 
