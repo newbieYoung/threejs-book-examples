@@ -121,7 +121,6 @@ export default class Main {
    */
   touchStart(event) {
     var touch = event.touches[0];
-    this.startPoint = touch;
     if (this.touchLine.isHover(touch)) {
       this.touchLine.enable();
     }

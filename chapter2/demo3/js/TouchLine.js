@@ -96,14 +96,12 @@ export default class TouchLine {
    */
   move(y) {
     if (this.isActive) {
-      if (y < window.innerHeight * this.main.minPercent || y > window.innerHeight * (1 - this.main.minPercent)) {
-        if (y < window.innerHeight * this.main.minPercent) {
-          y = window.innerHeight * this.main.minPercent;
-        } else {
-          y = window.innerHeight * (1 - this.main.minPercent);
-        }
+      if (y < window.innerHeight * this.main.minPercent){
+        y = window.innerHeight * this.main.minPercent;
+      } else if (y > window.innerHeight * (1 - this.main.minPercent)){
+        y = window.innerHeight * (1 - this.main.minPercent);
       }
-
+      
       var len = this.screenRect.top + this.screenRect.height / 2 - y; //屏幕移动距离
       this.screenRect.top = y - this.screenRect.height / 2;
 
