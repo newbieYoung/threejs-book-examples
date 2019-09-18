@@ -109,6 +109,9 @@ export default class Rubik {
     this.main.scene.add(this.group);
   }
 
+  /**
+   * 根据所占界面的比例设置魔方视图高度
+   */
   resizeHeight(percent, transformTag) {
     if (percent < this.main.minPercent) {
       percent = this.main.minPercent;
