@@ -82,17 +82,18 @@ export default class Rubik {
   }
 
   model(type) {
+    //创建集合
     this.group = new THREE.Group();
     this.group.childType = type;
 
-    //生成魔方小正方体
+    //生成小方块
     this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, BasicParams.num, BasicParams.len, BasicParams.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
 
       /**
        * 小方块不再直接加入场景了；
-       * 而是先加入魔方集合，然后再把魔方集合加入场景。
+       * 而是先加入集合，然后再把集合加入场景。
        */
       //this.main.scene.add(item);
       this.group.add(item);

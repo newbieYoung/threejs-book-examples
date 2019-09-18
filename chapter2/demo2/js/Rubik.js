@@ -82,7 +82,7 @@ export default class Rubik {
   }
 
   model() {
-    //生成魔方小正方体
+    //生成小方块
     this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, BasicParams.num, BasicParams.len, BasicParams.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
