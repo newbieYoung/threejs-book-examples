@@ -18,6 +18,7 @@ npm install
 │   └── OrbitControls.js      //轨道视角控制器
 ├── js                        //逻辑脚本目录
 │   ├── Rubik.js              //魔方对象
+│   ├── TouchLine.js          //UI 控制条
 │   └── main.js
 ├── miniprogram_npm           //开发工具构建 npm 之后的第三方类库目录
 │   └── three
