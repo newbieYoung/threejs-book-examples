@@ -121,6 +121,7 @@ export default class Main {
    */
   touchStart(event) {
     var touch = event.touches[0];
+    //console.log(touch);
     if (this.touchLine.isHover(touch)) {
       this.touchLine.enable();
     }
@@ -131,7 +132,7 @@ export default class Main {
    */
   touchMove(event) {
     var touch = event.touches[0];
-    if (this.touchLine.isActive) { //滑动touchline
+    if (this.touchLine.isActive) {
       this.touchLine.move(touch.clientY);
       var frontPercent = touch.clientY / window.innerHeight;
       var endPercent = 1 - frontPercent;
