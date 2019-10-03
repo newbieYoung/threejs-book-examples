@@ -27,9 +27,9 @@ export default class TouchLine {
       self.defaultPosition();
       self.showInScene();
     }, function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      console.log(url+' loading...')
     }, function (xhr) {
-      console.log('An error happened');
+      console.log(url+' load error');
     });
   }
 
