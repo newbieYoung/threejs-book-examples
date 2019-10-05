@@ -90,11 +90,7 @@ export default class Rubik {
     this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, BasicParams.num, BasicParams.len, BasicParams.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
-
-      /**
-       * 小方块不再直接加入场景了；
-       * 而是先加入集合，然后再把集合加入场景。
-       */
+      //小方块不再直接加入场景了，而是先加入集合，然后再把集合加入场景。
       //this.main.scene.add(item);
       this.group.add(item);
     }
