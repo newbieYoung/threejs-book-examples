@@ -21,22 +21,22 @@
 import {
 	BufferGeometry,
 	Color,
-	DefaultLoadingManager,
 	FileLoader,
 	Float32BufferAttribute,
 	Group,
+	Loader,
 	LoaderUtils,
 	Mesh,
 	MeshPhongMaterial
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 var AMFLoader = function ( manager ) {
 
-	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+	Loader.call( this, manager );
 
 };
 
-AMFLoader.prototype = {
+AMFLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 	constructor: AMFLoader,
 
@@ -52,13 +52,6 @@ AMFLoader.prototype = {
 			onLoad( scope.parse( text ) );
 
 		}, onProgress, onError );
-
-	},
-
-	setPath: function ( value ) {
-
-		this.path = value;
-		return this;
 
 	},
 
@@ -504,6 +497,6 @@ AMFLoader.prototype = {
 
 	}
 
-};
+} );
 
 export { AMFLoader };

@@ -1,11 +1,11 @@
 import {
-  WebGLRenderer
-} from '../../src/Three';
+	WebGLRenderer
+} from '../../../src/Three';
 
 export interface WEBVROptions {
-  referenceSpaceType: string;
+	referenceSpaceType: string;
 }
 
 export namespace WEBVR {
-  export function createButton(renderer: WebGLRenderer, options: WEBVROptions);
+	export function createButton( renderer: WebGLRenderer, options: WEBVROptions );
 }

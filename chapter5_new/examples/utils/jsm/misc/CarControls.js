@@ -14,7 +14,7 @@ import {
 	Group,
 	Math as _Math,
 	Vector3
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 var CarControls = ( function ( ) {
 
@@ -249,7 +249,7 @@ var CarControls = ( function ( ) {
 			frontLeftWheelRoot.rotation[ this.wheelTurnAxis ] = wheelOrientation;
 			frontRightWheelRoot.rotation[ this.wheelTurnAxis ] = wheelOrientation;
 
-			steeringWheel.rotation[ this.steeringWheelTurnAxis ] = -wheelOrientation * 6;
+			steeringWheel.rotation[ this.steeringWheelTurnAxis ] = - wheelOrientation * 6;
 
 		},
 

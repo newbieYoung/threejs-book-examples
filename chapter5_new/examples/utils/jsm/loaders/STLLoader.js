@@ -58,21 +58,21 @@
 import {
 	BufferAttribute,
 	BufferGeometry,
-	DefaultLoadingManager,
 	FileLoader,
 	Float32BufferAttribute,
+	Loader,
 	LoaderUtils,
 	Vector3
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 
 var STLLoader = function ( manager ) {
 
-	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+	Loader.call( this, manager );
 
 };
 
-STLLoader.prototype = {
+STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 	constructor: STLLoader,
 
@@ -100,13 +100,6 @@ STLLoader.prototype = {
 			}
 
 		}, onProgress, onError );
-
-	},
-
-	setPath: function ( value ) {
-
-		this.path = value;
-		return this;
 
 	},
 
@@ -409,6 +402,6 @@ STLLoader.prototype = {
 
 	}
 
-};
+} );
 
 export { STLLoader };

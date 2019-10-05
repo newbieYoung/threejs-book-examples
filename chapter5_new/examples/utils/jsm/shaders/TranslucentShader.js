@@ -13,7 +13,7 @@ import {
 	ShaderChunk,
 	UniformsLib,
 	UniformsUtils
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 var TranslucentShader = {
 

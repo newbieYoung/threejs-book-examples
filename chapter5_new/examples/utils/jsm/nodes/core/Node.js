@@ -2,7 +2,7 @@
  * @author sunag / http://www.sunag.com.br/
  */
 
-import { Math as _Math } from '../../../build/three.module.js';
+import { Math as _Math } from '../../../../build/three.module.js';
 
 function Node( type ) {
 

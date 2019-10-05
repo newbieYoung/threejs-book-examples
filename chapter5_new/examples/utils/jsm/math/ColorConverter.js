@@ -5,7 +5,7 @@
 
 import {
 	Math as _Math
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 var ColorConverter = {
 

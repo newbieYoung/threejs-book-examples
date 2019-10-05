@@ -20,7 +20,7 @@ import {
 	Vector2,
 	Vector3,
 	Vector4
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 var Lensflare = function () {
 
@@ -42,14 +42,12 @@ var Lensflare = function () {
 	tempMap.magFilter = NearestFilter;
 	tempMap.wrapS = ClampToEdgeWrapping;
 	tempMap.wrapT = ClampToEdgeWrapping;
-	tempMap.needsUpdate = true;
 
 	var occlusionMap = new DataTexture( new Uint8Array( 16 * 16 * 3 ), 16, 16, RGBFormat );
 	occlusionMap.minFilter = NearestFilter;
 	occlusionMap.magFilter = NearestFilter;
 	occlusionMap.wrapS = ClampToEdgeWrapping;
 	occlusionMap.wrapT = ClampToEdgeWrapping;
-	occlusionMap.needsUpdate = true;
 
 	// material
 

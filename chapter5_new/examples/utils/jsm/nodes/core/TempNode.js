@@ -3,7 +3,7 @@
  * @author sunag / http://www.sunag.com.br/
  */
 
-import { Math as _Math } from '../../../build/three.module.js';
+import { Math as _Math } from '../../../../build/three.module.js';
 import { Node } from './Node.js';
 
 function TempNode( type, params ) {

@@ -1,12 +1,12 @@
 import {
-  Uniform
-} from '../../src/Three';
+	Uniform
+} from '../../../src/Three';
 
 export const SepiaShader: {
-  uniforms: {
-    tDiffuse: Uniform;
-    amount: Uniform;
-  };
-  vertexShader: string;
-  fragmentShader: string;
+	uniforms: {
+		tDiffuse: Uniform;
+		amount: Uniform;
+	};
+	vertexShader: string;
+	fragmentShader: string;
 };

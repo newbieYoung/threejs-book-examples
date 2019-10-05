@@ -64,7 +64,7 @@ import {
 	Color,
 	ShaderLib,
 	ShaderMaterial
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 var OutlineEffect = function ( renderer, parameters ) {
 

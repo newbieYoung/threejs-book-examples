@@ -14,50 +14,50 @@ import {
 	RGBA_PVRTC_4BPPV1_Format,
 	RGB_PVRTC_2BPPV1_Format,
 	RGB_PVRTC_4BPPV1_Format
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 
 var PVRLoader = function ( manager ) {
 
 	CompressedTextureLoader.call( this, manager );
 
-	this._parser = PVRLoader.parse;
-
 };
 
-PVRLoader.prototype = Object.create( CompressedTextureLoader.prototype );
-PVRLoader.prototype.constructor = PVRLoader;
+PVRLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prototype ), {
 
+	constructor: PVRLoader,
 
-PVRLoader.parse = function ( buffer, loadMipmaps ) {
+	parse: function ( buffer, loadMipmaps ) {
 
-	var headerLengthInt = 13;
-	var header = new Uint32Array( buffer, 0, headerLengthInt );
+		var headerLengthInt = 13;
+		var header = new Uint32Array( buffer, 0, headerLengthInt );
 
-	var pvrDatas = {
-		buffer: buffer,
-		header: header,
-		loadMipmaps: loadMipmaps
-	};
+		var pvrDatas = {
+			buffer: buffer,
+			header: header,
+			loadMipmaps: loadMipmaps
+		};
 
-	if ( header[ 0 ] === 0x03525650 ) {
+		if ( header[ 0 ] === 0x03525650 ) {
 
-		// PVR v3
+			// PVR v3
 
-		return PVRLoader._parseV3( pvrDatas );
+			return PVRLoader._parseV3( pvrDatas );
 
-	} else if ( header[ 11 ] === 0x21525650 ) {
+		} else if ( header[ 11 ] === 0x21525650 ) {
 
-		// PVR v2
+			// PVR v2
 
-		return PVRLoader._parseV2( pvrDatas );
+			return PVRLoader._parseV2( pvrDatas );
 
-	} else {
+		} else {
 
-		console.error( 'THREE.PVRLoader: Unknown PVR format.' );
+			console.error( 'THREE.PVRLoader: Unknown PVR format.' );
+
+		}
 
 	}
 
-};
+} );
 
 PVRLoader._parseV3 = function ( pvrDatas ) {
 

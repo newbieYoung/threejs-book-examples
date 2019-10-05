@@ -9,7 +9,7 @@ import {
 	RGBFormat,
 	ShaderMaterial,
 	UniformsUtils
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 import { Pass } from "../postprocessing/Pass.js";
 import { DigitalGlitch } from "../shaders/DigitalGlitch.js";
 
@@ -115,9 +115,7 @@ GlitchPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
 		}
 
-		var texture = new DataTexture( data_arr, dt_size, dt_size, RGBFormat, FloatType );
-		texture.needsUpdate = true;
-		return texture;
+		return new DataTexture( data_arr, dt_size, dt_size, RGBFormat, FloatType );
 
 	}
 

@@ -3,8 +3,8 @@
  */
 
 import {
-	DefaultLoadingManager
-} from "../../build/three.module.js";
+	Loader
+} from "../../../build/three.module.js";
 import { GLTFLoader } from "../loaders/GLTFLoader.js";
 
 // VRM Specification: https://dwango.github.io/vrm/vrm_spec/
@@ -22,16 +22,15 @@ var VRMLoader = ( function () {
 
 		}
 
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+		Loader.call( this, manager );
+
 		this.gltfLoader = new GLTFLoader( this.manager );
 
 	}
 
-	VRMLoader.prototype = {
+	VRMLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		constructor: VRMLoader,
-
-		crossOrigin: 'anonymous',
 
 		load: function ( url, onLoad, onProgress, onError ) {
 
@@ -42,27 +41,6 @@ var VRMLoader = ( function () {
 				scope.parse( gltf, onLoad );
 
 			}, onProgress, onError );
-
-		},
-
-		setCrossOrigin: function ( value ) {
-
-			this.glTFLoader.setCrossOrigin( value );
-			return this;
-
-		},
-
-		setPath: function ( value ) {
-
-			this.glTFLoader.setPath( value );
-			return this;
-
-		},
-
-		setResourcePath: function ( value ) {
-
-			this.glTFLoader.setResourcePath( value );
-			return this;
 
 		},
 
@@ -85,7 +63,7 @@ var VRMLoader = ( function () {
 
 		}
 
-	};
+	} );
 
 	return VRMLoader;
 

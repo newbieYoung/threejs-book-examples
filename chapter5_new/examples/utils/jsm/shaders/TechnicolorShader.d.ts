@@ -1,11 +1,11 @@
 import {
-  Uniform
-} from '../../src/Three';
+	Uniform
+} from '../../../src/Three';
 
 export const TechnicolorShader: {
-  uniforms: {
-    tDiffuse: Uniform;
-  };
-  vertexShader: string;
-  fragmentShader: string;
+	uniforms: {
+		tDiffuse: Uniform;
+	};
+	vertexShader: string;
+	fragmentShader: string;
 };

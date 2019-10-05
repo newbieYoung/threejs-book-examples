@@ -107,7 +107,7 @@ import {
 	Math as _Math,
 	Uint32BufferAttribute,
 	Vector3
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 import { SimplexNoise } from "../math/SimplexNoise.js";
 
 var LightningStrike = function ( rayParameters ) {

@@ -24,7 +24,7 @@ import {
 	Vector3,
 	WebGLRenderTarget,
 	ZeroFactor
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 import { Pass } from "../postprocessing/Pass.js";
 import { SimplexNoise } from "../math/SimplexNoise.js";
 import { SSAOShader } from "../shaders/SSAOShader.js";
@@ -418,7 +418,6 @@ SSAOPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 		this.noiseTexture = new DataTexture( data, width, height, RGBAFormat, FloatType );
 		this.noiseTexture.wrapS = RepeatWrapping;
 		this.noiseTexture.wrapT = RepeatWrapping;
-		this.noiseTexture.needsUpdate = true;
 
 	}
 

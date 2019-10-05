@@ -19,7 +19,7 @@ import {
 	Vector3,
 	Vector4,
 	VertexColors
-} from "../../build/three.module.js";
+} from "../../../build/three.module.js";
 import { Projector } from "../renderers/Projector.js";
 import { RenderableFace } from "../renderers/Projector.js";
 import { RenderableLine } from "../renderers/Projector.js";

@@ -9,7 +9,7 @@ import {
 	CubeUVRefractionMapping,
 	LinearEncoding,
 	GammaEncoding
-} from '../../../build/three.module.js';
+} from '../../../../build/three.module.js';
 
 import { NodeUniform } from './NodeUniform.js';
 import { NodeUtils } from './NodeUtils.js';
@@ -227,7 +227,7 @@ NodeBuilder.prototype = {
 
 			this.addVaryCode( 'varying vec3 vWNormal;' );
 
-			this.addVertexFinalCode( 'vWNormal = ( modelMatrix * vec4( objectNormal, 0.0 ) ).xyz;' );
+			this.addVertexFinalCode( 'vWNormal = inverseTransformDirection( transformedNormal, viewMatrix ).xyz;' );
 
 		}
 
