@@ -75,7 +75,6 @@
 			light.position.set( 5, 0, -8 )
 			light.castShadow = true
 			light.intensity = .5
-			light = light
 			scene.add( light )
 		}
 
@@ -112,13 +111,13 @@
 									new THREE.MeshBasicMaterial( { color: 0xffffff } )
 								)
 							);
-							wrapper.scale.set(5, 5, 5);
+							
 							wrapper.add( screenLight );
 						}
 					}
 
 				} );
-					
+				wrapper.scale.set(5, 5, 5);
 				scene.add( wrapper )
 			})
 		}

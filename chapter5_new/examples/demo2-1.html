@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>demo1-3</title>
+	<title>demo2-1</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
@@ -24,6 +24,8 @@
 	import { OrbitControls } from './utils/jsm/controls/OrbitControls.js'
 	import { GLTFLoader } from './utils/jsm/loaders/GLTFLoader.js'
 	import { DRACOLoader } from './utils/jsm/loaders/DRACOLoader.js'
+	import { BasisTextureLoader } from './utils/jsm/loaders/BasisTextureLoader.js'
+
 
 	//项目初始化
 	app()
@@ -36,12 +38,10 @@
 			camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
 			camera.position.set( 5, 2, 8 );
 			scene = new THREE.Scene()
-
+			scene.background = new THREE.Color( 0x000000 )
 			//添加灯光
 			initLight()
 
-			//加载贴图和添加模型
-			loadTex()
 
 			renderer = new THREE.WebGLRenderer({ 
 				alpha: true,
@@ -51,6 +51,9 @@
 			renderer.setSize( window.innerWidth, window.innerHeight )
 			renderer.gammaOutput = true;
 			renderer.gammaFactor = 2.2;
+
+			//添加模型
+			initModle()
 			
 			//添加旋转控制器
 			controls = new OrbitControls( camera, renderer.domElement )
@@ -73,10 +76,16 @@
 			light.castShadow = true
 			light.intensity = .5
 			scene.add( light )
+
+			let light2 = new THREE.DirectionalLight( 0xffffff )
+			light2.position.set( -5, 0, 8 )
+			light2.castShadow = true
+			light2.intensity = .5
+			scene.add( light2 )
 		}
 
 		//加载模型
-		const initModle = (texture) => {
+		const initModle = () => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径
@@ -86,50 +95,25 @@
 			gltfLoader.load( './assets/models/gltf/notex/tv-processed.glb', function (gltf) {
 
 				let wrapper = new THREE.Object3D();
-								
+
+				// 素材还要在拆分 上班后回去跪设计师要
 				gltf.scene.traverse( function ( child ) {
 
 					if ( child.isMesh) {
-						if(child.name == 'TV_Solo'){
-							child.material = new THREE.MeshStandardMaterial( { 
-								map:texture,
-								shininess: 0,
-								side: THREE.FrontSide 
+						
+							child.material = new THREE.MeshBasicMaterial( { 
+								wireframe: true,
+								wireframeLinewidth: 1
 							} );
 							child.position.set(0, 0, 0);
 							wrapper.add( child );
-						}
-						if(child.name == 'TV_Screen'){
-							const screenLight = new THREE.DirectionalLight( 0xffffff, .5 );
-							screenLight.position.set(0, 0, 0);
-							screenLight.castShadow = true;
-							screenLight.add(
-								new THREE.Mesh(
-									child.geometry,
-									new THREE.MeshBasicMaterial( { color: 0xffffff } )
-								)
-							);
-							wrapper.add( screenLight );
-						}
+						
 					}
 
 				} );
 				wrapper.scale.set(5, 5, 5);
 				scene.add( wrapper )
 			})
-		}
-
-		//加载贴图
-
-		const loadTex = () => {
-			const textureLoader = new THREE.TextureLoader().load( './assets/texture/tv-processed0.png', function(texture){
-				texture.flipY = false;
-				initModle(texture);
-			},
-			undefined,
-			function ( err ) {
-				console.error( '纹理加载失败' );
-			} );
 		}
 
 		//不停地渲染
