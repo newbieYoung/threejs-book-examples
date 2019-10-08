@@ -49,8 +49,7 @@
 			})
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight )
-			renderer.gammaOutput = true;
-			renderer.gammaFactor = 2.2;
+			
 
 			//添加模型
 			initModle()
@@ -96,18 +95,50 @@
 
 				let wrapper = new THREE.Object3D();
 
-				// 素材还要在拆分 上班后回去跪设计师要
 				gltf.scene.traverse( function ( child ) {
 
 					if ( child.isMesh) {
-						
+						if(child.name == '3_TV_Front'){
 							child.material = new THREE.MeshBasicMaterial( { 
-								wireframe: true,
-								wireframeLinewidth: 1
+								color: 0xFD5647
 							} );
-							child.position.set(0, 0, 0);
-							wrapper.add( child );
-						
+						}else if(child.name == '1_TV_Stand') {
+							child.material = new THREE.MeshBasicMaterial( { 
+								color: 0x69503B
+							} );
+						}else if(child.name == '3_TV_Back') {
+							child.material = new THREE.MeshBasicMaterial( { 
+								color: 0xBBBBBB
+							} );
+						}else if(child.name == '4_TV_Knob') {
+							child.material = new THREE.MeshBasicMaterial( { 
+								color: 0xF3D9BB
+							} );
+						}else if(child.name == '4_TV_Switch') {
+							child.material = new THREE.MeshBasicMaterial( { 
+								color: 0xF3D9BB
+							} );
+						}else if(child.name == '1_TV_Table') {
+							child.material = new THREE.MeshBasicMaterial( { 
+								color: 0xBBBBBB
+							} );
+						}else if(child.name == '2_TV_Screen') {
+							child.material = new THREE.MeshBasicMaterial( { 
+								color: 0xFFFFFF
+							} );
+						}
+						else if(child.name == '5_TV_Stickers') {
+							child.material = new THREE.MeshBasicMaterial( { 
+								opacity: 0,
+								transparent : true
+							} );
+						}
+
+					}else{
+						if(child.name == "TV_MeshGroup"){
+							child.position.set(0, 0, 0)
+							wrapper.add(child)
+						}
 					}
 
 				} );

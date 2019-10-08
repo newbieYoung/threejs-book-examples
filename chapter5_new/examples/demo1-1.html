@@ -83,6 +83,10 @@
 								
 				gltf.scene.traverse( function ( child ) {
 					if ( child.isMesh ) {
+						if(child.name == "3_TV_Stickers"){
+							// 贴纸有透明材质 最后再渲染
+							child.renderOrder = 1;
+						}
 						wrapper.add( child )
 					}
 				})

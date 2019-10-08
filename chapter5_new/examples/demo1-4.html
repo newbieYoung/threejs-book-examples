@@ -92,27 +92,14 @@
 				gltf.scene.traverse( function ( child ) {
 
 					if ( child.isMesh) {
-						if(child.name == 'TV_Solo'){
-							child.material = new THREE.MeshStandardMaterial( { 
-								map:texture,
-								shininess: 0,
-								side: THREE.FrontSide 
-							} );
-							child.position.set(0, 0, 0);
-							wrapper.add( child );
-						}
-						if(child.name == 'TV_Screen'){
-							const screenLight = new THREE.DirectionalLight( 0xffffff, .5 );
-							screenLight.position.set(0, 0, 0);
-							screenLight.castShadow = true;
-							screenLight.add(
-								new THREE.Mesh(
-									child.geometry,
-									new THREE.MeshBasicMaterial( { color: 0xffffff } )
-								)
-							);
-							
-							wrapper.add( screenLight );
+						child.material = new THREE.MeshStandardMaterial( { 
+							map:texture,
+							transparent: true
+						} );
+					}else{
+						if(child.name == "TV_MeshGroup"){
+							child.position.set(0, 0, 0)
+							wrapper.add(child)
 						}
 					}
 
@@ -129,6 +116,7 @@
 			basisLoader.setTranscoderPath( './utils/libs/basis/' );
 			basisLoader.detectSupport( renderer );
 			basisLoader.load( './assets/texture/tv-processed0.basis', function(texture){
+				texture.encoding = THREE.sRGBEncoding;
 				texture.flipY = false;
 				initModle(texture);
 			},

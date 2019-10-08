@@ -86,30 +86,19 @@
 			gltfLoader.load( './assets/models/gltf/notex/tv-processed.glb', function (gltf) {
 
 				let wrapper = new THREE.Object3D();
+
 								
 				gltf.scene.traverse( function ( child ) {
-
+					
 					if ( child.isMesh) {
-						if(child.name == 'TV_Solo'){
 							child.material = new THREE.MeshStandardMaterial( { 
 								map:texture,
-								shininess: 0,
-								side: THREE.FrontSide 
+								transparent: true
 							} );
-							child.position.set(0, 0, 0);
-							wrapper.add( child );
-						}
-						if(child.name == 'TV_Screen'){
-							const screenLight = new THREE.DirectionalLight( 0xffffff, .5 );
-							screenLight.position.set(0, 0, 0);
-							screenLight.castShadow = true;
-							screenLight.add(
-								new THREE.Mesh(
-									child.geometry,
-									new THREE.MeshBasicMaterial( { color: 0xffffff } )
-								)
-							);
-							wrapper.add( screenLight );
+					}else{
+						if(child.name == "TV_MeshGroup"){
+							child.position.set(0, 0, 0)
+							wrapper.add(child)
 						}
 					}
 
@@ -123,6 +112,7 @@
 
 		const loadTex = () => {
 			const textureLoader = new THREE.TextureLoader().load( './assets/texture/tv-processed0.png', function(texture){
+				texture.encoding = THREE.sRGBEncoding;
 				texture.flipY = false;
 				initModle(texture);
 			},
