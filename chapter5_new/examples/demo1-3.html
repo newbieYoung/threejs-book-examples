@@ -41,7 +41,7 @@
 			initLight()
 
 			//加载贴图和添加模型
-			loadTex()
+			loadTex(initModle)
 
 			renderer = new THREE.WebGLRenderer({ 
 				alpha: true,
@@ -69,14 +69,21 @@
 
 			//平行光
 			let light = new THREE.DirectionalLight( 0xffffff )
-			light.position.set( 5, 0, -8 )
+			light.position.set( -5, 0, 8 )
 			light.castShadow = true
-			light.intensity = .5
+			light.intensity = .4
 			scene.add( light )
+
+			//平行光
+			let light2 = new THREE.DirectionalLight( 0xffffff )
+			light2.position.set( 5, 0, -8 )
+			light2.castShadow = true
+			light2.intensity = .4
+			scene.add( light2 )
 		}
 
 		//加载模型
-		const initModle = (texture) => {
+		const initModle = (map, aoMap, normalMap) => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径
@@ -92,9 +99,17 @@
 					
 					if ( child.isMesh) {
 							child.material = new THREE.MeshStandardMaterial( { 
-								map:texture,
+								map:map,
+								aoMap : aoMap,
+								metalnessMap : aoMap,
+								roughnessMap : aoMap,
+								normalMap : normalMap,
+								roughness: 1,
+								metalness: 1,
+								envMap : null,
 								transparent: true
 							} );
+							console.log(child.material)
 					}else{
 						if(child.name == "TV_MeshGroup"){
 							child.position.set(0, 0, 0)
@@ -103,23 +118,28 @@
 					}
 
 				} );
-				wrapper.scale.set(5, 5, 5);
+				wrapper.scale.set(3.3, 3.3, 3.3);
 				scene.add( wrapper )
+
+				animate()
 			})
 		}
 
 		//加载贴图
 
-		const loadTex = () => {
-			const textureLoader = new THREE.TextureLoader().load( './assets/texture/tv-processed0.png', function(texture){
-				texture.encoding = THREE.sRGBEncoding;
-				texture.flipY = false;
-				initModle(texture);
-			},
-			undefined,
-			function ( err ) {
-				console.error( '纹理加载失败' );
-			} );
+		const loadTex = (callback) => {
+			const textureLoader = new THREE.TextureLoader();
+			Promise.all([
+				new Promise((resolve, reject) => textureLoader.load( "./assets/texture/tv-processed0.png", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => textureLoader.load( "./assets/texture/tv-processed1.png", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => textureLoader.load( "./assets/texture/tv-processed2.png", resolve, undefined, reject ) ),
+			]).then(([map, aoMap, normalMap]) => {
+				map.encoding = THREE.sRGBEncoding;
+				map.flipY = false;
+				aoMap.flipY = false;
+				normalMap.flipY = false;
+				callback(map, aoMap, normalMap)
+			});
 		}
 
 		//不停地渲染
@@ -139,7 +159,6 @@
 
 		//render渲染内容
 		init()
-		animate()
 
 	}
 

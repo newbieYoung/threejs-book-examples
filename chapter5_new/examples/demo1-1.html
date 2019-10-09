@@ -68,10 +68,17 @@
 
 			//平行光
 			let light = new THREE.DirectionalLight( 0xffffff )
-			light.position.set( 5, 0, -8 )
+			light.position.set( -5, 0, 8 )
 			light.castShadow = true
-			light.intensity = .5
+			light.intensity = .4
 			scene.add( light )
+
+			//平行光
+			let light2 = new THREE.DirectionalLight( 0xffffff )
+			light2.position.set( 5, 0, -8 )
+			light2.castShadow = true
+			light2.intensity = .4
+			scene.add( light2 )
 		}
 
 		//加载模型
@@ -91,6 +98,8 @@
 					}
 				})
 				scene.add( wrapper )
+
+				animate()
 			})
 		}
 
@@ -112,7 +121,7 @@
 
 		//render渲染内容
 		init()
-		animate()
+		
 
 	}
 
