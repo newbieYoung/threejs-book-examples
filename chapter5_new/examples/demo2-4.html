@@ -69,18 +69,19 @@
 			ambientLight.intensity = .68
 			scene.add(ambientLight)
 
-			//平行光
-			let light = new THREE.PointLight( 0xffffff )
-			light.position.set( 5, 0, -8 )
-			light.castShadow = true
-			light.intensity = .5
-			scene.add( light )
+			//点光源
+			let pointLight1 = new THREE.PointLight( 0xffffff )
+			pointLight1.position.set( 5, 0, -8 )
+			pointLight1.castShadow = true
+			pointLight1.intensity = .5
+			scene.add( pointLight1 )
 
-			let light2 = new THREE.PointLight( 0xffffff )
-			light2.position.set( -5, 0, 8 )
-			light2.castShadow = true
-			light2.intensity = .5
-			scene.add( light2 )
+			//点光源
+			let pointLight2 = new THREE.PointLight( 0xffffff )
+			pointLight2.position.set( -5, 0, 8 )
+			pointLight2.castShadow = true
+			pointLight2.intensity = .5
+			scene.add( pointLight2 )
 		}
 
 		//加载模型
@@ -100,19 +101,23 @@
 					if ( child.isMesh) {
 						if(child.name == '3_TV_Front'){
 							child.material = new THREE.MeshPhongMaterial( { 
-								color: 0xFD5647
+								color: 0xFD5647,
+								specular: 0xaaaaaa
 							} );
 						}else if(child.name == '1_TV_Stand') {
 							child.material = new THREE.MeshPhongMaterial( { 
-								color: 0x69503B
+								color: 0x69503B,
+								specular: 0xaaaaaa
 							} );
 						}else if(child.name == '3_TV_Back') {
 							child.material = new THREE.MeshPhongMaterial( { 
-								color: 0xBBBBBB
+								color: 0xBBBBBB,
+								specular: 0xaaaaaa
 							} );
 						}else if(child.name == '4_TV_Knob') {
 							child.material = new THREE.MeshPhongMaterial( { 
-								color: 0xF3D9BB
+								color: 0xF3D9BB,
+								specular: 0xaaaaaa
 							} );
 						}else if(child.name == '4_TV_Switch') {
 							child.material = new THREE.MeshPhongMaterial( { 

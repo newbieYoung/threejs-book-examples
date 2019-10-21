@@ -69,18 +69,19 @@
 			ambientLight.intensity = .68
 			scene.add(ambientLight)
 
-			//平行光
-			let light = new THREE.PointLight( 0xffffff )
-			light.position.set( 5, 0, -8 )
-			light.castShadow = true
-			light.intensity = .5
-			scene.add( light )
+			//点光源
+			let pointLight1 = new THREE.PointLight( 0xffffff )
+			pointLight1.position.set( 5, 0, -8 )
+			pointLight1.castShadow = true
+			pointLight1.intensity = .5
+			scene.add( pointLight1 )
 
-			let light2 = new THREE.PointLight( 0xffffff )
-			light2.position.set( -5, 0, 8 )
-			light2.castShadow = true
-			light2.intensity = .5
-			scene.add( light2 )
+			//点光源
+			let pointLight2 = new THREE.PointLight( 0xffffff )
+			pointLight2.position.set( -5, 0, 8 )
+			pointLight2.castShadow = true
+			pointLight2.intensity = .5
+			scene.add( pointLight2 )
 		}
 
 		//加载模型

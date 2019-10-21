@@ -39,8 +39,7 @@
 			camera.position.set( 5, 2, 8 );
 			scene = new THREE.Scene()
 			scene.background = new THREE.Color( 0x000000 )
-			//添加灯光
-			initLight()
+
 
 
 			renderer = new THREE.WebGLRenderer({ 
@@ -60,27 +59,6 @@
 
 			document.body.appendChild( renderer.domElement )
 			window.addEventListener( 'resize', onWindowResize, false )
-		}
-
-		//初始化灯光
-		const initLight = () => {
-			//环境光
-			let ambientLight = new THREE.AmbientLight(0xffffff)
-			ambientLight.intensity = .88
-			scene.add(ambientLight)
-
-			//平行光
-			let light = new THREE.DirectionalLight( 0xffffff )
-			light.position.set( 5, 0, -8 )
-			light.castShadow = true
-			light.intensity = .5
-			scene.add( light )
-
-			let light2 = new THREE.DirectionalLight( 0xffffff )
-			light2.position.set( -5, 0, 8 )
-			light2.castShadow = true
-			light2.intensity = .5
-			scene.add( light2 )
 		}
 
 		//加载模型
