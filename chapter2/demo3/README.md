@@ -2,7 +2,7 @@
 
 ## 安装
 
-在项目描述文件`package.json`同级下目录执行以下命令：
+在项目描述文件`package.json`同级下目录依次执行以下命令：
 
 ```bash
 npm install
