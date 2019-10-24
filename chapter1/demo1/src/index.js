@@ -13,7 +13,7 @@ class Main {
   }
 
   /**
-   * 初始化渲染器
+   * 创建渲染器
    */
   initRender() {
 
@@ -27,28 +27,28 @@ class Main {
   }
 
   /**
-   * 初始化相机
+   * 添加相机
    */
   initCamera() {
 
   }
 
   /**
-   * 初始化灯光
+   * 添加灯光
    */
   initLight() {
 
   }
 
   /**
-   * 初始化物体
+   * 添加物体
    */
   initObject() {
 
   }
 
   /**
-   * 渲染
+   * 渲染成像
    */
   render() {
 
