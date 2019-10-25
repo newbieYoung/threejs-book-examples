@@ -27,7 +27,7 @@ export default class Main {
   }
 
   /**
-   * 初始化渲染器
+   * 创建渲染器
    */
   initRender() {
     this.renderer = new THREE.WebGLRenderer({
@@ -42,7 +42,7 @@ export default class Main {
   }
 
   /**
-   * 初始化相机
+   * 添加相机
    */
   initCamera() {
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1500);
@@ -66,7 +66,7 @@ export default class Main {
   }
 
   /**
-   * 初始化光线
+   * 添加灯光
    */
   initLight() {
     this.light = new THREE.AmbientLight(0xfefefe);
@@ -74,7 +74,7 @@ export default class Main {
   }
 
   /**
-   * 初始化物体
+   * 添加物体
    */
   initObject() {
     //正视图魔方
@@ -91,7 +91,7 @@ export default class Main {
   }
 
   /**
-   * 渲染
+   * 渲染成像
    */
   render() {
     this.renderer.clear();
