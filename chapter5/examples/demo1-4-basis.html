@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>demo1-3</title>
+	<title>demo1-4</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
@@ -24,6 +24,8 @@
 	import { OrbitControls } from './utils/jsm/controls/OrbitControls.js'
 	import { GLTFLoader } from './utils/jsm/loaders/GLTFLoader.js'
 	import { DRACOLoader } from './utils/jsm/loaders/DRACOLoader.js'
+	import { BasisTextureLoader } from './utils/jsm/loaders/BasisTextureLoader.js'
+
 
 	//项目初始化
 	app()
@@ -40,8 +42,6 @@
 			//添加灯光
 			initLight()
 
-			//加载贴图和添加模型
-			loadTex(initModle)
 
 			renderer = new THREE.WebGLRenderer({ 
 				alpha: true,
@@ -51,6 +51,9 @@
 			renderer.setSize( window.innerWidth, window.innerHeight )
 			renderer.gammaOutput = true;
 			renderer.gammaFactor = 2.2;
+
+			//加载贴图和添加模型
+			loadBasisTex(initModle)
 			
 			//添加旋转控制器
 			controls = new OrbitControls( camera, renderer.domElement )
@@ -83,7 +86,7 @@
 		}
 
 		//加载模型
-		const initModle = (map, metalMap, normalMap, roughMap, stickerMap) => {
+		const initModle = (map, metalMap, normalMap, roughMap) => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径
@@ -91,39 +94,30 @@
 			gltfLoader.setDRACOLoader( dracoLoader );
 
 			gltfLoader.load( './assets/models/gltf/notex/tv-white-processed.glb', function (gltf) {
-
 				let wrapper = new THREE.Object3D();
 				let children = []
 				gltf.scene.traverse( function ( child ) {
 
 					if ( child.isMesh) {
-						if(child.name == '1_TV_Screen'){
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0xffffff
-							} );
-						}else if(child.name == '2_TV_Solo'){
-							child.material = new THREE.MeshStandardMaterial( { 
-								map:map,
-								// aoMap : aoMap,
-								metalnessMap : metalMap,
-								roughnessMap : roughMap,
-								normalMap : normalMap,
-								roughness: 1,
-								metalness: 1,
-								envMap : null
-							} );
-						}else if(child.name == '3_TV_Stickers'){
-							child.material = new THREE.MeshStandardMaterial( { 
-								map:stickerMap,
-								transparent: true
-							} );
-						}
+						child.material = new THREE.MeshStandardMaterial( { 
+							map:map,
+							// aoMap : aoMap,
+							metalnessMap : metalMap,
+							roughnessMap : roughMap,
+							normalMap : normalMap,
+							roughness: 1,
+							metalness: 1,
+							envMap : null,
+							transparent: true
+						} );
 						children.push(child)
 					}
 
 				} );
 				for(let i = 0; i < children.length; i ++){
-					wrapper.add(children[i])
+					if(children[i].name == '2_TV_Solo'){
+						wrapper.add(children[i])
+					}
 				}
 				wrapper.scale.set(3.3, 3.3, 3.3);
 				scene.add( wrapper )
@@ -132,25 +126,23 @@
 			})
 		}
 
-		//加载贴图
 
-		const loadTex = (callback) => {
-			const textureLoader = new THREE.TextureLoader();
+		const loadBasisTex = (callback) => {
+			const basisLoader = new BasisTextureLoader();
+			basisLoader.setTranscoderPath( './utils/libs/basis/' );
+			basisLoader.detectSupport( renderer );
 			Promise.all([
-				new Promise((resolve, reject) => textureLoader.load( "./assets/models/gltf/notex/texture-png/tv0.png", resolve, undefined, reject ) ),
-				new Promise((resolve, reject) => textureLoader.load( "./assets/models/gltf/notex/texture-png/tv1.png", resolve, undefined, reject ) ),
-				new Promise((resolve, reject) => textureLoader.load( "./assets/models/gltf/notex/texture-png/tv2.png", resolve, undefined, reject ) ),
-				new Promise((resolve, reject) => textureLoader.load( "./assets/models/gltf/notex/texture-png/tv3.png", resolve, undefined, reject ) ),
-				new Promise((resolve, reject) => textureLoader.load( "./assets/models/gltf/notex/texture-png/tv-sticker.png", resolve, undefined, reject ) ),
-				]).then(([map, metalMap, normalMap, roughMap, stickerMap]) => {
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv0.basis", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv1.basis", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv2.basis", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv3.basis", resolve, undefined, reject ) ),
+			]).then(([map, metalMap, normalMap, roughMap]) => {
 				map.encoding = THREE.sRGBEncoding;
-				stickerMap.encoding = THREE.sRGBEncoding;
 				map.flipY = false;
 				metalMap.flipY = false;
 				normalMap.flipY = false;
 				roughMap.flipY = false;
-				stickerMap.flipY = false;
-				callback(map, metalMap, normalMap, roughMap, stickerMap)
+				callback(map, metalMap, normalMap, roughMap)
 			});
 		}
 
@@ -171,6 +163,7 @@
 
 		//render渲染内容
 		init()
+		
 
 	}
 

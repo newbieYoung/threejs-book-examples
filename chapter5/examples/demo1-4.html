@@ -86,7 +86,7 @@
 		}
 
 		//加载模型
-		const initModle = (map, metalMap, normalMap, roughMap) => {
+		const initModle = (map, metalMap, normalMap, roughMap, stickerMap) => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径
@@ -99,25 +99,33 @@
 				gltf.scene.traverse( function ( child ) {
 
 					if ( child.isMesh) {
-						child.material = new THREE.MeshStandardMaterial( { 
-							map:map,
-							// aoMap : aoMap,
-							metalnessMap : metalMap,
-							roughnessMap : roughMap,
-							normalMap : normalMap,
-							roughness: 1,
-							metalness: 1,
-							envMap : null,
-							transparent: true
-						} );
+						if(child.name == '1_TV_Screen'){
+							child.material = new THREE.MeshLambertMaterial( { 
+								color: 0xffffff
+							} );
+						}else if(child.name == '2_TV_Solo'){
+							child.material = new THREE.MeshStandardMaterial( { 
+								map:map,
+								// aoMap : aoMap,
+								metalnessMap : metalMap,
+								roughnessMap : roughMap,
+								normalMap : normalMap,
+								roughness: 1,
+								metalness: 1,
+								envMap : null
+							} );
+						}else if(child.name == '3_TV_Stickers'){
+							child.material = new THREE.MeshStandardMaterial( { 
+								map:stickerMap,
+								transparent: true
+							} );
+						}
 						children.push(child)
 					}
 
 				} );
 				for(let i = 0; i < children.length; i ++){
-					if(children[i].name == '2_TV_Solo'){
-						wrapper.add(children[i])
-					}
+					wrapper.add(children[i])
 				}
 				wrapper.scale.set(3.3, 3.3, 3.3);
 				scene.add( wrapper )
@@ -132,17 +140,20 @@
 			basisLoader.setTranscoderPath( './utils/libs/basis/' );
 			basisLoader.detectSupport( renderer );
 			Promise.all([
-				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv0-255.basis", resolve, undefined, reject ) ),
-				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv1-no_hybrid_sel_cb.basis", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv0.basis", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv1.basis", resolve, undefined, reject ) ),
 				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv2.basis", resolve, undefined, reject ) ),
-				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv3-no_hybrid_sel_cb.basis", resolve, undefined, reject ) ),
-			]).then(([map, metalMap, normalMap, roughMap]) => {
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv3.basis", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => basisLoader.load( "./assets/models/gltf/notex/texture-basis/tv-sticker.basis", resolve, undefined, reject ) ),
+			]).then(([map, metalMap, normalMap, roughMap, stickerMap]) => {
 				map.encoding = THREE.sRGBEncoding;
+				stickerMap.encoding = THREE.sRGBEncoding;
 				map.flipY = false;
 				metalMap.flipY = false;
 				normalMap.flipY = false;
 				roughMap.flipY = false;
-				callback(map, metalMap, normalMap, roughMap)
+				stickerMap.flipY = false;
+				callback(map, metalMap, normalMap, roughMap, stickerMap)
 			});
 		}
 
