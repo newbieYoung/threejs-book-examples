@@ -1,14 +1,12 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
 import Rubik from './Rubik.js'
 import TouchLine from './TouchLine.js'
-const Context = canvas.getContext('webgl');
 
 /**
  * 游戏主函数
  */
 export default class Main {
   constructor() {
-    this.context = Context; //绘图上下文
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.devicePixelRatio = window.devicePixelRatio;
@@ -32,12 +30,10 @@ export default class Main {
   initRender() {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
-      context: this.context
+      canvas: canvas
     });
     this.renderer.setSize(this.width, this.height);
     this.renderer.setClearColor(0xFFFFFF, 1.0);
-    canvas.width = this.width * this.devicePixelRatio;
-    canvas.height = this.height * this.devicePixelRatio;
     this.renderer.setPixelRatio(this.devicePixelRatio);
   }
 
@@ -96,7 +92,7 @@ export default class Main {
   render() {
     this.renderer.clear();
     this.renderer.render(this.scene, this.camera);
-    requestAnimationFrame(this.render.bind(this), canvas);
+    requestAnimationFrame(this.render.bind(this));
   }
 
   /**
