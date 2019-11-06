@@ -7,9 +7,6 @@ import '../plugin/OrbitControls.js'
  */
 export default class Main {
   constructor() {
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-    this.devicePixelRatio = window.devicePixelRatio;
     this.viewCenter = new THREE.Vector3(0, 0, 0); //原点
 
     this.initRender();
@@ -24,6 +21,10 @@ export default class Main {
    * 创建渲染器
    */
   initRender() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.devicePixelRatio = window.devicePixelRatio;
+
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       canvas: canvas
