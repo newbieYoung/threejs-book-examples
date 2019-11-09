@@ -16,21 +16,15 @@ export default class TouchLine {
    */
   loadImage(url) {
     var self = this;
-    var loader = new THREE.TextureLoader();
-    loader.load(url, function (texture) {
-      var geometry = new THREE.PlaneBufferGeometry(self.width, self.height);
-      var material = new THREE.MeshBasicMaterial({
-        map: texture,
-        transparent: true
-      });
-      self.plane = new THREE.Mesh(geometry, material);
-      self.defaultPosition();
-      self.showInScene();
-    }, function (xhr) {
-      console.log(url+' loading...')
-    }, function (xhr) {
-      console.log(url+' load error');
+    var texture = new THREE.TextureLoader().load(url)
+    var geometry = new THREE.PlaneBufferGeometry(self.width, self.height);
+    var material = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true
     });
+    self.plane = new THREE.Mesh(geometry, material);
+    self.defaultPosition();
+    self.showInScene();
   }
 
   /**
