@@ -1,7 +1,7 @@
 {
-  "name": "demo1",
+  "name": "demo2",
   "version": "1.0.0",
-  "description": "npm + webpack 基础开发环境",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
