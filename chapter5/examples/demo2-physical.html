@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>demo2-4</title>
+	<title>demo2-physical</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
@@ -59,6 +59,8 @@
 			controls = new OrbitControls( camera, renderer.domElement )
 			controls.rotateSpeed = .4
 
+			controls.addEventListener( 'change', () => renderer.render( scene, camera ) );
+
 			document.body.appendChild( renderer.domElement )
 			window.addEventListener( 'resize', onWindowResize, false )
 		}
@@ -83,6 +85,13 @@
 			pointLight2.castShadow = true
 			pointLight2.intensity = .6
 			scene.add( pointLight2 )
+
+			//点光源
+			let pointLight3 = new THREE.PointLight( 0xffffff )
+			pointLight3.position.set( 0, -8, 8 )
+			pointLight3.castShadow = true
+			pointLight3.intensity = .6
+			scene.add( pointLight3 )
 		}
 
 		//加载模型
@@ -106,7 +115,7 @@
 								roughness: .8,
 								metalness: 1,
 								clearcoat: 1,
-								clearcoatroughness: 0.5
+								clearcoatroughness: 0.6
 							} );
 						}else if(child.name == '1_TV_Stand') {
 							child.material = new THREE.MeshPhysicalMaterial( { 
@@ -175,14 +184,9 @@
 				} );
 				wrapper.scale.set(5, 5, 5);
 				scene.add( wrapper )
-			})
-		}
 
-		//不停地渲染
-		const animate = () => {
-			window.requestAnimationFrame( animate )
-			controls.update()
-			renderer.render( scene, camera )
+				renderer.render( scene, camera )
+			})
 		}
 
 		
@@ -191,11 +195,11 @@
 			camera.aspect = window.innerWidth / window.innerHeight
 			camera.updateProjectionMatrix()
 			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.render( scene, camera )
 		}
 
 		//render渲染内容
 		init()
-		animate()
 
 	}
 

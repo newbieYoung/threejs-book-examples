@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>demo2-4</title>
+	<title>demo2-standard</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
@@ -59,6 +59,8 @@
 			controls = new OrbitControls( camera, renderer.domElement )
 			controls.rotateSpeed = .4
 
+			controls.addEventListener( 'change', () => renderer.render( scene, camera ) );
+
 			document.body.appendChild( renderer.domElement )
 			window.addEventListener( 'resize', onWindowResize, false )
 		}
@@ -72,17 +74,24 @@
 
 			//点光源
 			let pointLight1 = new THREE.PointLight( 0xffffff )
-			pointLight1.position.set( 5, 2, -8 )
+			pointLight1.position.set( 5, 0, -8 )
 			pointLight1.castShadow = true
 			pointLight1.intensity = .6
 			scene.add( pointLight1 )
 
 			//点光源
 			let pointLight2 = new THREE.PointLight( 0xffffff )
-			pointLight2.position.set( -5, 6, 8 )
+			pointLight2.position.set( -5, 0, 8 )
 			pointLight2.castShadow = true
 			pointLight2.intensity = .6
 			scene.add( pointLight2 )
+
+			//点光源
+			let pointLight3 = new THREE.PointLight( 0xffffff )
+			pointLight3.position.set( 0, -8, 8 )
+			pointLight3.castShadow = true
+			pointLight3.intensity = .6
+			scene.add( pointLight3 )
 		}
 
 		//加载模型
@@ -110,7 +119,7 @@
 							child.material = new THREE.MeshStandardMaterial( { 
 								color: 0x69503B,
 								roughness: 1,
-								metalness: 0
+								metalness: 1,
 							} );
 						}else if(child.name == '3_TV_Back') {
 							child.material = new THREE.MeshStandardMaterial( { 
@@ -161,14 +170,9 @@
 				} );
 				wrapper.scale.set(5, 5, 5);
 				scene.add( wrapper )
-			})
-		}
 
-		//不停地渲染
-		const animate = () => {
-			window.requestAnimationFrame( animate )
-			controls.update()
-			renderer.render( scene, camera )
+				renderer.render( scene, camera )
+			})
 		}
 
 		
@@ -177,6 +181,7 @@
 			camera.aspect = window.innerWidth / window.innerHeight
 			camera.updateProjectionMatrix()
 			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.render( scene, camera )
 		}
 
 		//render渲染内容
