@@ -49,7 +49,8 @@
 			})
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight )
-			
+			renderer.gammaOutput = true;
+			renderer.gammaFactor = 2.2;
 
 			//添加模型
 			initModle()
@@ -57,6 +58,9 @@
 			//添加旋转控制器
 			controls = new OrbitControls( camera, renderer.domElement )
 			controls.rotateSpeed = .4
+
+			controls.addEventListener( 'change', () => renderer.render( scene, camera ) );
+
 
 			document.body.appendChild( renderer.domElement )
 			window.addEventListener( 'resize', onWindowResize, false )
@@ -103,36 +107,44 @@
 							child.material = new THREE.MeshLambertMaterial( { 
 								color: 0xFD5647
 							} );
+							child.material.color.convertSRGBToLinear();
 						}else if(child.name == '1_TV_Stand') {
 							child.material = new THREE.MeshLambertMaterial( { 
 								color: 0x69503B
 							} );
+							child.material.color.convertSRGBToLinear();
 						}else if(child.name == '3_TV_Back') {
 							child.material = new THREE.MeshLambertMaterial( { 
 								color: 0xBBBBBB
 							} );
+							child.material.color.convertSRGBToLinear();
 						}else if(child.name == '4_TV_Knob') {
 							child.material = new THREE.MeshLambertMaterial( { 
 								color: 0xF3D9BB
 							} );
+							child.material.color.convertSRGBToLinear();
 						}else if(child.name == '4_TV_Switch') {
 							child.material = new THREE.MeshLambertMaterial( { 
 								color: 0xF3D9BB
 							} );
+							child.material.color.convertSRGBToLinear();
 						}else if(child.name == '1_TV_Table') {
 							child.material = new THREE.MeshLambertMaterial( { 
 								color: 0xBBBBBB
 							} );
+							child.material.color.convertSRGBToLinear();
 						}else if(child.name == '2_TV_Screen') {
 							child.material = new THREE.MeshLambertMaterial( { 
 								color: 0xFFFFFF
 							} );
+							child.material.color.convertSRGBToLinear();
 						}
 						else if(child.name == '5_TV_Stickers') {
 							child.material = new THREE.MeshLambertMaterial( { 
 								opacity: 0,
 								transparent : true
 							} );
+							child.material.color.convertSRGBToLinear();
 						}
 
 					}else{
@@ -145,14 +157,8 @@
 				} );
 				wrapper.scale.set(5, 5, 5);
 				scene.add( wrapper )
+				renderer.render( scene, camera )
 			})
-		}
-
-		//不停地渲染
-		const animate = () => {
-			window.requestAnimationFrame( animate )
-			controls.update()
-			renderer.render( scene, camera )
 		}
 
 		
@@ -161,11 +167,11 @@
 			camera.aspect = window.innerWidth / window.innerHeight
 			camera.updateProjectionMatrix()
 			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.render( scene, camera )
 		}
 
 		//render渲染内容
 		init()
-		animate()
 
 	}
 

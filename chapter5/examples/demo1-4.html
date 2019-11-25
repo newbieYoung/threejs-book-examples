@@ -59,6 +59,8 @@
 			controls = new OrbitControls( camera, renderer.domElement )
 			controls.rotateSpeed = .4
 
+			controls.addEventListener( 'change', () => renderer.render( scene, camera ) );
+
 			document.body.appendChild( renderer.domElement )
 			window.addEventListener( 'resize', onWindowResize, false )
 		}
@@ -130,7 +132,7 @@
 				wrapper.scale.set(3.3, 3.3, 3.3);
 				scene.add( wrapper )
 
-				animate()
+				renderer.render( scene, camera )
 			})
 		}
 
@@ -157,22 +159,15 @@
 			});
 		}
 
-		//不停地渲染
-		const animate = () => {
-			window.requestAnimationFrame( animate )
-			controls.update()
-			renderer.render( scene, camera )
-		}
 
-		
 		//响应式
 		const onWindowResize = () => {
 			camera.aspect = window.innerWidth / window.innerHeight
 			camera.updateProjectionMatrix()
 			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.render( scene, camera )
 		}
 
-		//render渲染内容
 		init()
 		
 

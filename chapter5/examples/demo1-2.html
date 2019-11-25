@@ -56,6 +56,8 @@
 			controls = new OrbitControls( camera, renderer.domElement )
 			controls.rotateSpeed = .4
 
+			controls.addEventListener( 'change', () => renderer.render( scene, camera ) );
+
 			document.body.appendChild( renderer.domElement )
 			window.addEventListener( 'resize', onWindowResize, false )
 		}
@@ -90,37 +92,33 @@
 			dracoLoader.setDecoderPath( './utils/libs/draco/gltf/' );
 			gltfLoader.setDRACOLoader( dracoLoader );
 
-			gltfLoader.load( './assets/models/gltf/process/tv-1k-processed.glb', function (gltf) {
+			gltfLoader.load( './assets/models/gltf/tv-processed.glb', function (gltf) {
 
 				let wrapper = new THREE.Object3D();
 								
 				gltf.scene.traverse( function ( child ) {
 					if ( child.isMesh ) {
-						
+						console.log(child.material)
+						if(child.name == "3_TV_Stickers"){
+							// 贴纸有透明材质 最后再渲染
+							child.renderOrder = 1;
+						}
 						wrapper.add( child )
 					}
 				})
 				scene.add( wrapper )
-				animate()
+				renderer.render( scene, camera )
 			})
 		}
-
-		//不停地渲染
-		const animate = () => {
-			window.requestAnimationFrame( animate )
-			controls.update()
-			renderer.render( scene, camera )
-		}
-
 		
 		//响应式
 		const onWindowResize = () => {
 			camera.aspect = window.innerWidth / window.innerHeight
 			camera.updateProjectionMatrix()
 			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.render( scene, camera )
 		}
 
-		//render渲染内容
 		init()
 		
 
