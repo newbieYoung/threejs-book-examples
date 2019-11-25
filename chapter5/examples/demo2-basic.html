@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>demo2-1</title>
+	<title>demo2-basic</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
@@ -48,6 +48,9 @@
 			})
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight )
+
+			renderer.gammaOutput = true;
+			renderer.gammaFactor = 2.2;
 			
 
 			//添加模型
@@ -113,6 +116,7 @@
 								transparent : true
 							} );
 						}
+						child.material.color.convertSRGBToLinear();
 
 					}else{
 						if(child.name == "TV_MeshGroup"){
