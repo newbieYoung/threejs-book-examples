@@ -27,7 +27,9 @@ class Main {
   }
 
   //初始化场景
-  initScene() {}
+  initScene() {
+    this.scene = new THREE.Scene();
+  }
 
   //添加相机
   initCamera() {}
