@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>demo2-emissive</title>
+	<title>demo2-toon</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<style>
@@ -38,9 +38,9 @@
 			camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
 			camera.position.set( 5, 2, 8 );
 			scene = new THREE.Scene()
-			scene.background = new THREE.Color( 0x000000 )
+			// scene.background = new THREE.Color( 0x000000 )
 			//添加灯光
-			// initLight()
+			initLight()
 
 
 			renderer = new THREE.WebGLRenderer({ 
@@ -49,7 +49,8 @@
 			})
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight )
-			
+			renderer.gammaOutput = true;
+			renderer.gammaFactor = 2.2;
 
 			//添加模型
 			initModle()
@@ -57,6 +58,8 @@
 			//添加旋转控制器
 			controls = new OrbitControls( camera, renderer.domElement )
 			controls.rotateSpeed = .4
+
+			controls.addEventListener( 'change', () => renderer.render( scene, camera ) );
 
 			document.body.appendChild( renderer.domElement )
 			window.addEventListener( 'resize', onWindowResize, false )
@@ -73,7 +76,7 @@
 			let pointLight1 = new THREE.PointLight( 0xffffff )
 			pointLight1.position.set( 5, 0, -8 )
 			pointLight1.castShadow = true
-			pointLight1.intensity = .5
+			pointLight1.intensity = .4
 			scene.add( pointLight1 )
 
 			//点光源
@@ -82,6 +85,13 @@
 			pointLight2.castShadow = true
 			pointLight2.intensity = .5
 			scene.add( pointLight2 )
+
+			// //点光源
+			// let pointLight3 = new THREE.PointLight( 0xffffff )
+			// pointLight3.position.set( 0, -8, 8 )
+			// pointLight3.castShadow = true
+			// pointLight3.intensity = .6
+			// scene.add( pointLight3 )
 		}
 
 		//加载模型
@@ -95,45 +105,70 @@
 			gltfLoader.load( './assets/models/gltf/notex/tv-processed.glb', function (gltf) {
 
 				let wrapper = new THREE.Object3D();
+				let blackMeshGroup = new THREE.Object3D();
 
 				gltf.scene.traverse( function ( child ) {
 
 					if ( child.isMesh) {
+
+						if(child.name != '5_TV_Stickers') {
+							// let blackMesh = new THREE.Mesh(
+							// 	child.geometry,
+							// 	new THREE.MeshBasicMaterial({
+							// 		color: 0x000000,
+							// 		side: THREE.BackSide
+							// 	})
+							// );
+							let outlineMat = new THREE.MeshBasicMaterial({ 
+								color: 'black',
+								// side: THREE.BackSide 
+							})
+							outlineMat.onBeforeCompile = function(shader) { 
+								const token ='#include <begin_vertex>' 
+								const customTransform = "vec3 transformed = vec3( position ) + normal*vec3(0.5, 0.5, 0.5);"
+								shader.vertexShader = shader.vertexShader.replace(token, customTransform);
+							}
+							let outlineMesh = new THREE.Mesh(child.geometry, outlineMat)
+							// blackMesh.scale.set(5.1,5.1,5.1)
+							blackMeshGroup.add(outlineMesh)
+						}
+
 						if(child.name == '3_TV_Front'){
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0x00000, emissive: 0xFD5647
+							child.material = new THREE.MeshToonMaterial( { 
+								color: 0xFD5647
 							} );
 						}else if(child.name == '1_TV_Stand') {
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0x00000, emissive: 0x69503B
+							child.material = new THREE.MeshToonMaterial( { 
+								color: 0x69503B
 							} );
 						}else if(child.name == '3_TV_Back') {
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0x00000, emissive: 0xBBBBBB
+							child.material = new THREE.MeshToonMaterial( { 
+								color: 0xBBBBBB
 							} );
 						}else if(child.name == '4_TV_Knob') {
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0x00000, emissive: 0xF3D9BB
+							child.material = new THREE.MeshToonMaterial( { 
+								color: 0xF3D9BB
 							} );
 						}else if(child.name == '4_TV_Switch') {
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0x00000, emissive: 0xF3D9BB
+							child.material = new THREE.MeshToonMaterial( { 
+								color: 0xF3D9BB
 							} );
 						}else if(child.name == '1_TV_Table') {
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0x00000, emissive: 0xBBBBBB
+							child.material = new THREE.MeshToonMaterial( { 
+								color: 0xBBBBBB
 							} );
 						}else if(child.name == '2_TV_Screen') {
-							child.material = new THREE.MeshLambertMaterial( { 
-								color: 0x00000, emissive: 0xFFFFFF
+							child.material = new THREE.MeshToonMaterial( { 
+								color: 0xFFFFFF
 							} );
 						}
 						else if(child.name == '5_TV_Stickers') {
-							child.material = new THREE.MeshLambertMaterial( { 
+							child.material = new THREE.MeshBasicMaterial( { 
 								opacity: 0,
 								transparent : true
 							} );
 						}
+						child.material.color.convertSRGBToLinear();
 
 					}else{
 						if(child.name == "TV_MeshGroup"){
@@ -144,15 +179,12 @@
 
 				} );
 				wrapper.scale.set(5, 5, 5);
-				scene.add( wrapper )
-			})
-		}
+				// blackMeshGroup.scale.set(5.1, 5.1, 5.1);
+				// scene.add( wrapper )
+				scene.add( blackMeshGroup )
 
-		//不停地渲染
-		const animate = () => {
-			window.requestAnimationFrame( animate )
-			controls.update()
-			renderer.render( scene, camera )
+				renderer.render( scene, camera )
+			})
 		}
 
 		
@@ -161,11 +193,11 @@
 			camera.aspect = window.innerWidth / window.innerHeight
 			camera.updateProjectionMatrix()
 			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.render( scene, camera )
 		}
 
 		//render渲染内容
 		init()
-		animate()
 
 	}
 
