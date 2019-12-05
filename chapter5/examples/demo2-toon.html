@@ -24,7 +24,6 @@
 	import { OrbitControls } from './utils/jsm/controls/OrbitControls.js'
 	import { GLTFLoader } from './utils/jsm/loaders/GLTFLoader.js'
 	import { DRACOLoader } from './utils/jsm/loaders/DRACOLoader.js'
-	import { BasisTextureLoader } from './utils/jsm/loaders/BasisTextureLoader.js'
 
 
 	//项目初始化
@@ -53,7 +52,7 @@
 			renderer.gammaFactor = 2.2;
 
 			//添加模型
-			initModle()
+			initModel()
 			
 			//添加旋转控制器
 			controls = new OrbitControls( camera, renderer.domElement )
@@ -86,16 +85,10 @@
 			pointLight2.intensity = .5
 			scene.add( pointLight2 )
 
-			// //点光源
-			// let pointLight3 = new THREE.PointLight( 0xffffff )
-			// pointLight3.position.set( 0, -8, 8 )
-			// pointLight3.castShadow = true
-			// pointLight3.intensity = .6
-			// scene.add( pointLight3 )
 		}
 
 		//加载模型
-		const initModle = () => {
+		const initModel = () => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径
@@ -105,33 +98,10 @@
 			gltfLoader.load( './assets/models/gltf/notex/tv-processed.glb', function (gltf) {
 
 				let wrapper = new THREE.Object3D();
-				let blackMeshGroup = new THREE.Object3D();
 
 				gltf.scene.traverse( function ( child ) {
 
 					if ( child.isMesh) {
-
-						if(child.name != '5_TV_Stickers') {
-							// let blackMesh = new THREE.Mesh(
-							// 	child.geometry,
-							// 	new THREE.MeshBasicMaterial({
-							// 		color: 0x000000,
-							// 		side: THREE.BackSide
-							// 	})
-							// );
-							let outlineMat = new THREE.MeshBasicMaterial({ 
-								color: 'black',
-								// side: THREE.BackSide 
-							})
-							outlineMat.onBeforeCompile = function(shader) { 
-								const token ='#include <begin_vertex>' 
-								const customTransform = "vec3 transformed = vec3( position ) + normal*vec3(0.5, 0.5, 0.5);"
-								shader.vertexShader = shader.vertexShader.replace(token, customTransform);
-							}
-							let outlineMesh = new THREE.Mesh(child.geometry, outlineMat)
-							// blackMesh.scale.set(5.1,5.1,5.1)
-							blackMeshGroup.add(outlineMesh)
-						}
 
 						if(child.name == '3_TV_Front'){
 							child.material = new THREE.MeshToonMaterial( { 
@@ -178,10 +148,8 @@
 					}
 
 				} );
-				wrapper.scale.set(5, 5, 5);
-				// blackMeshGroup.scale.set(5.1, 5.1, 5.1);
-				// scene.add( wrapper )
-				scene.add( blackMeshGroup )
+				wrapper.scale.set(4, 4, 4);
+				scene.add( wrapper )
 
 				renderer.render( scene, camera )
 			})

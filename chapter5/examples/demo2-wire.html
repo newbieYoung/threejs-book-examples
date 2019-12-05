@@ -51,7 +51,7 @@
 			
 
 			//添加模型
-			initModle()
+			initModel()
 			
 			//添加旋转控制器
 			controls = new OrbitControls( camera, renderer.domElement )
@@ -64,7 +64,7 @@
 		}
 
 		//加载模型
-		const initModle = () => {
+		const initModel = () => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径

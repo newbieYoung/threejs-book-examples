@@ -53,7 +53,7 @@
 			renderer.gammaFactor = 2.2;
 
 			//加载贴图和添加模型
-			loadBasisTex(initModle)
+			loadBasisTex(initModel)
 			
 			//添加旋转控制器
 			controls = new OrbitControls( camera, renderer.domElement )
@@ -88,7 +88,7 @@
 		}
 
 		//加载模型
-		const initModle = (map, metalMap, normalMap, roughMap, stickerMap) => {
+		const initModel = (map, metalMap, normalMap, roughMap, stickerMap) => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径

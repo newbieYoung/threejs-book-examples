@@ -41,7 +41,7 @@
 			initLight()
 
 			//加载贴图和添加模型
-			loadTex(initModle)
+			loadTex(initModel)
 
 			renderer = new THREE.WebGLRenderer({ 
 				alpha: true,
@@ -86,7 +86,7 @@
 		}
 
 		//加载模型
-		const initModle = (map, metalMap, normalMap, roughMap, stickerMap) => {
+		const initModel = (map, metalMap, normalMap, roughMap, stickerMap) => {
 			const gltfLoader = new GLTFLoader();
 			const dracoLoader = new DRACOLoader();
 			// 设置解码器路径

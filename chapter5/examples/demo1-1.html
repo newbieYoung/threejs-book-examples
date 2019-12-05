@@ -40,7 +40,7 @@
 			initLight()
 
 			//添加模型
-			initModle()
+			initModel()
 
 			renderer = new THREE.WebGLRenderer({ 
 				alpha: true,
@@ -84,7 +84,7 @@
 		}
 
 		//加载模型
-		const initModle = () => {
+		const initModel = () => {
 			const loader = new GLTFLoader().setPath( './assets/models/gltf/' )
 			loader.load( 'tv-1k.glb', function (gltf) {
 

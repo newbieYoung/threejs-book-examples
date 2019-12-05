@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>demo2-toon-gradientMap</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<style>
+			body {
+				background-color: rgba(236, 236, 236, 1);
+				color: #000;
+			}
+		*{padding: 0; margin: 0}
+	</style>
+</head>
+  
+<body>
+	<div id="app"></div>
+	<!-- built files will be auto injected -->
+</body>
+	
+<script type="module">
+
+	import * as THREE from './build/three.module.js'
+	import { OrbitControls } from './utils/jsm/controls/OrbitControls.js'
+
+
+	//项目初始化
+	app()
+	function app(){	
+		
+		let camera, scene, renderer, controls
+
+		const init = () => {	
+			//环境初始化
+			camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
+			camera.position.set( 0, 0, 30 );
+			scene = new THREE.Scene()
+			//添加灯光
+			initLight()
+
+
+			renderer = new THREE.WebGLRenderer({ 
+				alpha: true,
+				antialias: true 
+			})
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.gammaOutput = true;
+			renderer.gammaFactor = 2.2;
+
+			//添加模型
+			initMap(initModel)
+			
+			//添加旋转控制器
+			controls = new OrbitControls( camera, renderer.domElement )
+			controls.rotateSpeed = .4
+
+			controls.addEventListener( 'change', () => renderer.render( scene, camera ) );
+
+			document.body.appendChild( renderer.domElement )
+			window.addEventListener( 'resize', onWindowResize, false )
+		}
+
+		//初始化灯光
+		const initLight = () => {
+			// 环境光
+			let ambientLight = new THREE.AmbientLight(0xffffff)
+			ambientLight.intensity = .2
+			scene.add(ambientLight)
+
+			//点光源
+			let pointLight = new THREE.PointLight( 0xffffff )
+			pointLight.position.set( -32, 0, 16 )
+			pointLight.castShadow = true
+			pointLight.intensity = 1
+			scene.add( pointLight )
+
+		}
+
+		//加载模型
+		const initModel = (threeTone, fiveTone, fiveTone2) => {	
+			
+			const ball1 = new THREE.Mesh(
+				new THREE.SphereGeometry( 2, 32, 32 ),
+				new THREE.MeshToonMaterial( { 
+					color: 0xFD5647
+				} )
+			)
+			ball1.material.color.convertSRGBToLinear();
+			ball1.position.set(-9, 0, 0)
+
+			const ball2 = new THREE.Mesh(
+				new THREE.SphereGeometry( 2, 32, 32 ),
+				new THREE.MeshToonMaterial( { 
+					color: 0xFD5647,
+					gradientMap: threeTone
+				} )
+			)
+			
+			ball2.material.color.convertSRGBToLinear();
+			ball2.position.set(3, 0, 0)
+
+			const ball3 = new THREE.Mesh(
+				new THREE.SphereGeometry( 2, 32, 32 ),
+				new THREE.MeshToonMaterial( { 
+					color: 0xFD5647,
+					gradientMap: fiveTone
+				} )
+			)
+			
+			ball3.material.color.convertSRGBToLinear();
+			ball3.position.set(-3, 0, 0)
+			
+			const ball4 = new THREE.Mesh(
+				new THREE.SphereGeometry( 2, 32, 32 ),
+				new THREE.MeshToonMaterial( { 
+					color: 0xFD5647,
+					gradientMap: fiveTone2
+				} )
+			)
+			
+			ball4.material.color.convertSRGBToLinear();
+			ball4.position.set(9, 0, 0)
+
+			scene.add(ball1)
+			scene.add(ball2)
+			scene.add(ball3)
+			scene.add(ball4)
+
+			renderer.render( scene, camera )
+		}
+
+
+		const initMap = (callback) => {
+			const textureLoader1 = new THREE.TextureLoader();
+			const threeTone = textureLoader1.load( './assets/textures/threeTone.jpg',function(){} );
+			const textureLoader2 = new THREE.TextureLoader();
+			const fiveTone = textureLoader2.load( './assets/textures/fiveTone.jpg' );
+
+			const textureLoader = new THREE.TextureLoader();
+			Promise.all([
+				new Promise((resolve, reject) => textureLoader.load( "./assets/textures/threeTone.jpg", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => textureLoader.load( "./assets/textures/fiveTone.jpg", resolve, undefined, reject ) ),
+				new Promise((resolve, reject) => textureLoader.load( "./assets/textures/fiveTone2.jpg", resolve, undefined, reject ) ),
+				]).then(([threeTone, fiveTone, fiveTone2]) => {
+					threeTone.minFilter = THREE.NearestFilter;
+					threeTone.magFilter = THREE.NearestFilter;
+					fiveTone.minFilter = THREE.NearestFilter;
+					fiveTone.magFilter = THREE.NearestFilter;
+					fiveTone2.minFilter = THREE.NearestFilter;
+					fiveTone2.magFilter = THREE.NearestFilter;
+				callback(threeTone, fiveTone, fiveTone2)
+			});
+		}
+
+		
+		//响应式
+		const onWindowResize = () => {
+			camera.aspect = window.innerWidth / window.innerHeight
+			camera.updateProjectionMatrix()
+			renderer.setSize( window.innerWidth, window.innerHeight )
+			renderer.render( scene, camera )
+		}
+
+		//render渲染内容
+		init()
+
+	}
+
+</script>
+
+</html>
+<!DOCTYPE html>
+
