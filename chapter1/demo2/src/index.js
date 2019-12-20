@@ -20,7 +20,7 @@ class Main {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true, //抗锯齿开启
     });
-    this.renderer.setClearColor(0xDDDDDD, 1.0); //设置背景颜色
+    this.renderer.setClearColor(0xFFFFFF, 1.0); //设置背景颜色
     this.renderer.setSize(this.width, this.height); //设置渲染器宽度和高度
     this.renderer.setPixelRatio(this.devicePixelRatio); //设置设备像素比
     document.body.appendChild(this.renderer.domElement) //把画布显示到页面中
@@ -32,7 +32,12 @@ class Main {
   }
 
   //添加相机
-  initCamera() {}
+  initCamera() {
+    this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1500);
+    this.camera.position.set(0, 0, 300 / this.camera.aspect);
+    this.camera.up.set(0, 1, 0); //正方向
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+  }
 
   //添加灯光
   initLight() {}
