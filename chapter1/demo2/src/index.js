@@ -36,7 +36,7 @@ class Main {
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1500);
     this.camera.lookAt(new THREE.Vector3(0, 0, 0)); // 焦点
     this.camera.position.set(0, 0, 300 / this.camera.aspect); // 位置
-    this.camera.up.set(0, 1, 0); //正方向
+    this.camera.up.set(0, 1, 0); //上方向
     this.scene.add(this.camera);
   }
 
