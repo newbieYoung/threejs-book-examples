@@ -51,11 +51,11 @@ class Main {
 
   //添加物体
   initObject() {
-    var geometry = new THREE.BoxGeometry(100, 100, 100);
-    var material = new THREE.MeshLambertMaterial({
+    let geometry = new THREE.BoxGeometry(100, 100, 100); // 几何体
+    let material = new THREE.MeshBasicMaterial({ // 材质
       color: 0xff0000
     });
-    this.cube = new THREE.Mesh(geometry, material);
+    this.cube = new THREE.Mesh(geometry, material); // 网格
     this.cube.position.set(0, 0, 0);
     this.scene.add(this.cube);
   }
