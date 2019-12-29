@@ -46,7 +46,7 @@ class Main {
   //添加灯光
   initLight() {
     this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0); // 环境光
-    //this.scene.add(this.ambientLight);
+    this.scene.add(this.ambientLight);
   }
 
   //添加物体
