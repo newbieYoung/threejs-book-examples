@@ -37,9 +37,9 @@ class Main {
   //添加相机
   initCamera() {
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0)); // 焦点
     this.camera.position.set(200, 400, 600); // 位置
     this.camera.up.set(0, 1, 0); //上方向
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0)); // 焦点
     this.scene.add(this.camera);
   }
 
@@ -55,10 +55,9 @@ class Main {
     var material = new THREE.MeshLambertMaterial({
       color: 0xff0000
     });
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 0, 0);
-    this.scene.add(cube);
-    console.log(cube.position)
+    this.cube = new THREE.Mesh(geometry, material);
+    this.cube.position.set(0, 0, 0);
+    this.scene.add(this.cube);
   }
 
   //渲染成像
