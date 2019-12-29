@@ -55,10 +55,9 @@ class Main {
     var material = new THREE.MeshLambertMaterial({
       color: 0xff0000
     });
-    var cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 0, 0);
-    this.scene.add(cube);
-    console.log(cube.position)
+    this.cube = new THREE.Mesh(geometry, material);
+    this.cube.position.set(0, 0, 0);
+    this.scene.add(this.cube);
   }
 
   //渲染成像
