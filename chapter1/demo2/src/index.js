@@ -45,14 +45,18 @@ class Main {
 
   //添加灯光
   initLight() {
-    this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0); // 环境光
+    this.ambientLight = new THREE.AmbientLight(0x666666, 1.0); // 环境光
     this.scene.add(this.ambientLight);
+
+    this.pointLight = new THREE.PointLight(0xffffff, 1, 2000); //点光源
+    this.pointLight.position.set(70, 110, 90);
+    //this.scene.add(this.pointLight)
   }
 
   //添加物体
   initObject() {
     let geometry = new THREE.BoxGeometry(100, 100, 100); // 几何体
-    let material = new THREE.MeshBasicMaterial({ // 材质
+    let material = new THREE.MeshLambertMaterial({ // 材质
       color: 0xff0000
     });
     this.cube = new THREE.Mesh(geometry, material); // 网格
