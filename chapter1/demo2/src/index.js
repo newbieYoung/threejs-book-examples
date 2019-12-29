@@ -37,10 +37,10 @@ class Main {
   //添加相机
   initCamera() {
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0)); // 焦点
     this.camera.position.set(200, 400, 600); // 位置
     this.camera.up.set(0, 1, 0); //上方向
     this.scene.add(this.camera);
-    this.camera.lookAt(new THREE.Vector3(0, 0, 0)); // 焦点
   }
 
   //添加灯光
