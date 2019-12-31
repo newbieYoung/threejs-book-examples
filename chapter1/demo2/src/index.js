@@ -50,7 +50,7 @@ class Main {
 
     this.pointLight = new THREE.PointLight(0xffffff, 1, 2000); //点光源
     this.pointLight.position.set(70, 110, 90);
-    //this.scene.add(this.pointLight)
+    this.scene.add(this.pointLight)
   }
 
   //添加物体
