@@ -1,7 +1,4 @@
 import * as THREE from 'three'
-import {
-  Mesh
-} from 'three';
 
 //应用主逻辑
 class Main {
