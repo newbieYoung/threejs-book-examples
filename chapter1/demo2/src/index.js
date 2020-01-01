@@ -37,7 +37,7 @@ class Main {
   //添加相机
   initCamera() {
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
-    this.camera.position.set(200, 400, 600); // 位置
+    this.camera.position.set(0, 400, 600); // 位置
     this.camera.up.set(0, 1, 0); //上方向
     this.camera.lookAt(new THREE.Vector3(0, 0, 0)); // 焦点
     this.scene.add(this.camera);
@@ -49,19 +49,28 @@ class Main {
     this.scene.add(this.ambientLight);
 
     this.pointLight = new THREE.PointLight(0xffffff, 1, 2000); //点光源
-    this.pointLight.position.set(70, 110, 90);
+    this.pointLight.position.set(0, 120, 120);
     this.scene.add(this.pointLight)
   }
 
   //添加物体
   initObject() {
-    let geometry = new THREE.BoxGeometry(100, 100, 100); // 几何体
-    let material = new THREE.MeshLambertMaterial({ // 材质
+    let box = new THREE.BoxGeometry(100, 100, 100); // 立方体
+    let lambert = new THREE.MeshLambertMaterial({ // 兰伯特网格材质
       color: 0xff0000
     });
-    this.cube = new THREE.Mesh(geometry, material); // 网格
-    this.cube.position.set(0, 0, 0);
+    this.cube = new THREE.Mesh(box, lambert); // 网格
+    this.cube.position.set(-200, 20, 0);
     this.scene.add(this.cube);
+
+    let sphere = new THREE.SphereGeometry(80, 20, 20); // 球体
+    let phong = new THREE.MeshPhongMaterial({ // 冯氏网格材质
+      color: 0xff0000,
+      shininess: 60
+    });
+    this.ball = new THREE.Mesh(sphere, phong); // 网格
+    this.ball.position.set(200, 20, 0);
+    this.scene.add(this.ball);
   }
 
   //渲染成像
