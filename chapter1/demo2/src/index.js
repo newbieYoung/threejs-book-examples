@@ -29,6 +29,8 @@ class Main {
   //初始化场景
   initScene() {
     this.scene = new THREE.Scene();
+    var axes = new THREE.AxisHelper(100); // 坐标轴可视化工具
+    this.scene.add(axes);
   }
 
   //添加相机
