@@ -79,12 +79,13 @@ class Main {
     this.ball.castShadow = true; // 产生阴影
 
     let plane = new THREE.PlaneGeometry(800, 800); // 平面
-    let planeLambert = new THREE.MeshPhongMaterial({
+    let planePhong = new THREE.MeshPhongMaterial({
       color: 0xE0E0E0,
+      side: THREE.DoubleSide // 内表面+外表面
     });
-    this.floor = new THREE.Mesh(plane, planeLambert);
+    this.floor = new THREE.Mesh(plane, planePhong);
     this.floor.position.set(0, -70, -60);
-    this.floor.rotateX(-Math.PI / 2);
+    this.floor.rotateX(Math.PI / 2);
     this.scene.add(this.floor);
     this.floor.receiveShadow = true; // 显示阴影
   }
