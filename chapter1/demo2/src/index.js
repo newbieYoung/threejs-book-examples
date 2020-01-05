@@ -53,7 +53,7 @@ class Main {
     this.scene.add(this.pointLight)
 
     this.pointLight.castShadow = true; // 产生阴影
-    this.pointLight.shadow.camera.near = 1; // 定义阴影相机参数
+    this.pointLight.shadow.camera.near = 1; // 设置阴影相机参数
     this.pointLight.shadow.camera.far = 2000;
   }
 
