@@ -79,7 +79,7 @@ class Main {
     this.ball.castShadow = true; // 产生阴影
 
     let plane = new THREE.PlaneGeometry(800, 800); // 平面
-    let planeLambert = new THREE.MeshLambertMaterial({
+    let planeLambert = new THREE.MeshPhongMaterial({
       color: 0xE0E0E0,
     });
     this.floor = new THREE.Mesh(plane, planeLambert);
