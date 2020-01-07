@@ -1,4 +1,4 @@
-## 基于 npm + webpack 的 ThreeJS 浏览器基础项目
+## ThreeJS 简单场景（无纹理）
 
 ## 安装
 
