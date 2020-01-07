@@ -93,6 +93,8 @@ class Main {
   //渲染成像
   render() {
     this.renderer.clear();
+    this.cube.rotateX(Math.PI / 90); // 立方体持续绕X、Y轴旋转
+    this.cube.rotateY(Math.PI / 90);
     this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(this.render.bind(this));
   }
