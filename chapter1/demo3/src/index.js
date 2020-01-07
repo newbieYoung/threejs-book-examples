@@ -68,9 +68,11 @@ class Main {
     this.scene.add(this.cube);
     this.cube.castShadow = true; // 产生阴影
 
+    let earthTexture = new THREE.TextureLoader().load('./img/earth.jpg');
     let sphere = new THREE.SphereGeometry(80, 20, 20); // 球体
     let phong = new THREE.MeshPhongMaterial({ // 冯氏网格材质
-      color: 0xff0000,
+      //color: 0xff0000,
+      map: earthTexture,
       shininess: 60
     });
     this.ball = new THREE.Mesh(sphere, phong); // 网格
