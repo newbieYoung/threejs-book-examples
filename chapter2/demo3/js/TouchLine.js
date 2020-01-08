@@ -17,7 +17,7 @@ export default class TouchLine {
   loadImage(url) {
     var self = this;
     var texture = new THREE.TextureLoader().load(url)
-    var geometry = new THREE.PlaneBufferGeometry(self.width, self.height);
+    var geometry = new THREE.PlaneGeometry(self.width, self.height);
     var material = new THREE.MeshBasicMaterial({
       map: texture,
       transparent: true
@@ -90,12 +90,12 @@ export default class TouchLine {
    */
   move(y) {
     if (this.isActive) {
-      if (y < window.innerHeight * this.main.minPercent){
+      if (y < window.innerHeight * this.main.minPercent) {
         y = window.innerHeight * this.main.minPercent;
-      } else if (y > window.innerHeight * (1 - this.main.minPercent)){
+      } else if (y > window.innerHeight * (1 - this.main.minPercent)) {
         y = window.innerHeight * (1 - this.main.minPercent);
       }
-      
+
       var len = this.screenRect.top + this.screenRect.height / 2 - y; //屏幕移动距离
       var percent = len / window.innerHeight;
       var len2 = this.main.originHeight * percent;
