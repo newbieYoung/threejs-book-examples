@@ -25,6 +25,8 @@ class Main {
     this.renderer.setPixelRatio(this.devicePixelRatio); //设置设备像素比
     this.renderer.shadowMapEnabled = true; // 支持阴影
     document.body.appendChild(this.renderer.domElement) //把画布显示到页面中
+
+    this.renderTarget = new THREE.WebGLRenderTarget(256, 256); //离屏渲染
   }
 
   //初始化场景
@@ -41,6 +43,13 @@ class Main {
     this.camera.up.set(0, 1, 0); //上方向
     this.camera.lookAt(new THREE.Vector3(0, 0, 0)); // 焦点
     this.scene.add(this.camera);
+
+    //环境纹理相机
+    this.textureCamera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
+    this.textureCamera.position.set(0, 0, -500);
+    this.textureCamera.up.set(0, 1, 0);
+    this.textureCamera.lookAt(new THREE.Vector3(0, 0, 0))
+    this.scene.add(this.textureCamera);
   }
 
   //添加灯光
@@ -67,6 +76,17 @@ class Main {
     this.cube.position.set(-150, 0, 0);
     this.scene.add(this.cube);
     this.cube.castShadow = true; // 产生阴影
+
+    let mirrorGeo = new THREE.PlaneGeometry(256, 256); // 镜子
+    //this.renderTarget.texture.wrapS = THREE.RepeatWrapping; // 纹理映射参数
+    //this.renderTarget.texture.repeat.x = -1;
+    let mirrorMaterial = new THREE.MeshLambertMaterial({
+      map: this.renderTarget.texture
+    });
+    this.mirror = new THREE.Mesh(mirrorGeo, mirrorMaterial);
+    this.mirror.position.set(0, 0, -500);
+    this.mirror.scale.set(-1, 1, 1);
+    this.scene.add(this.mirror);
 
     let earthTexture = new THREE.TextureLoader().load('./img/earth.jpg');
     let sphere = new THREE.SphereGeometry(80, 20, 20); // 球体
@@ -97,6 +117,11 @@ class Main {
     this.renderer.clear();
     this.cube.rotateX(Math.PI / 90); // 立方体持续绕X、Y轴旋转
     this.cube.rotateY(Math.PI / 90);
+
+    this.renderer.setRenderTarget(this.renderTarget); // 离屏渲染
+    this.renderer.render(this.scene, this.textureCamera);
+
+    this.renderer.setRenderTarget(null); // 屏幕渲染
     this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(this.render.bind(this));
   }
