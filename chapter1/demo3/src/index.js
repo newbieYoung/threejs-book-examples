@@ -46,7 +46,7 @@ class Main {
 
     //环境纹理相机
     this.textureCamera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
-    this.textureCamera.position.set(0, 0, -500);
+    this.textureCamera.position.set(0, 50, -500);
     this.textureCamera.up.set(0, 1, 0);
     this.textureCamera.lookAt(new THREE.Vector3(0, 0, 0))
     this.scene.add(this.textureCamera);
@@ -84,7 +84,7 @@ class Main {
       map: this.renderTarget.texture
     });
     this.mirror = new THREE.Mesh(mirrorGeo, mirrorMaterial);
-    this.mirror.position.set(0, 0, -500);
+    this.mirror.position.set(0, 50, -500);
     this.mirror.scale.set(-1, 1, 1);
     this.scene.add(this.mirror);
 
