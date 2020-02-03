@@ -125,4 +125,25 @@ export default class Rubik {
     this.group.scale.set(percent, percent, percent);
     this.group.position.y = this.main.originHeight * (0.5 - percent / 2) * transformTag;
   }
+
+  /**
+   * 更新自身坐标系坐标轴向量在世界坐标系中的值
+   */
+  updateLocalAxisInWorld() {
+    var xLine = new THREE.Vector3(1, 0, 0);
+    var xLineAd = new THREE.Vector3(-1, 0, 0);
+    var yLine = new THREE.Vector3(0, 1, 0);
+    var yLineAd = new THREE.Vector3(0, -1, 0);
+    var zLine = new THREE.Vector3(0, 0, 1);
+    var zLineAd = new THREE.Vector3(0, 0, -1);
+
+    var matrix = this.group.matrixWorld;
+    
+    this.xLine = xLine.applyMatrix4(matrix);
+    this.xLineAd = xLineAd.applyMatrix4(matrix);
+    this.yLine = yLine.applyMatrix4(matrix);
+    this.yLineAd = yLine.applyMatrix4(matrix);
+    this.zLine = zLine.applyMatrix4(matrix);
+    this.zLineAd = zLineAd.applyMatrix4(matrix);
+  }
 }

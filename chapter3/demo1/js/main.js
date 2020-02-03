@@ -120,11 +120,11 @@ export default class Main {
    */
   touchStart(event) {
     var touch = event.touches[0];
-    //console.log(touch);
     if (this.touchLine.isHover(touch)) {
       this.touchLine.enable();
+    }else{
+      this.roll.start(event);
     }
-    this.roll.getIntersects(event);
   }
 
   /**

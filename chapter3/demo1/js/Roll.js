@@ -14,7 +14,7 @@ export default class Roll {
   reset(){
     this.intersect = null; //射线投射元素
     this.normalize = null; //射线投射平面法向量
-    this.targetRubik = null; //射线投射魔方
+    this.targetRubik = null; //目标魔方
     this.anotherRubik = null; //其它魔方
     this.isRotating = false; //是否正在转动魔方
     this.isSliding = false; //魔方是否在滑动
@@ -25,6 +25,22 @@ export default class Roll {
     this.moveTouch = null;
     this.movePoint = null;
     this.moveNormalize = null;
+  }
+
+  /**
+   * 开始
+   */
+  start(event) {
+    this.getIntersects(event);
+    if (this.intersect.length > 0) { //操控魔方
+      this.startTouch = this.touch;
+      this.startPoint = this.intersect;
+      this.startNormalize = this.normalize;
+    } else { //不操控魔方
+      this.startTouch = event.touches;
+      this.startPoint = new THREE.Vector2(this.startTouch[0].clientX, this.startTouch[0].clientY);
+    }
+    console.log(this.intersect);
   }
 
   /**
