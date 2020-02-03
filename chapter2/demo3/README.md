@@ -15,7 +15,7 @@ npm install
 ```
 ├── adapter                   //微信小游戏兼容脚本源代码目录
 ├── plugin                    //ThreeJS 插件
-│   └── OrbitControls.js      //轨道视角控制器
+│   └── OrbitControls.js      //轨道控制器
 ├── js                        //逻辑脚本目录
 │   ├── Rubik.js              //魔方对象
 │   ├── TouchLine.js          //UI 控制条

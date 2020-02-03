@@ -1,4 +1,4 @@
-## 静态魔方
+## 魔方转动
 
 ## 安装
 
@@ -18,6 +18,7 @@ npm install
 │   └── OrbitControls.js      //轨道控制器
 ├── js                        //逻辑脚本目录
 │   ├── Rubik.js              //魔方对象
+│   ├── TouchLine.js          //UI 控制条
 │   └── main.js
 ├── miniprogram_npm           //微信开发者工具构建 npm 包目录
 │   └── three

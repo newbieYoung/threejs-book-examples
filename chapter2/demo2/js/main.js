@@ -43,7 +43,7 @@ export default class Main {
     this.camera.up.set(0, 1, 0); //正方向
     this.camera.lookAt(this.viewCenter);
 
-    //轨道视角控制器
+    //轨道控制器
     this.orbitController = new THREE.OrbitControls(this.camera, this.renderer.domElement);
     this.orbitController.enableZoom = false;
     this.orbitController.rotateSpeed = 2;

@@ -1,18 +1,14 @@
 {
-  "name": "demo3",
+  "name": "demo1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "game.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.109.0"
-  },
-  "devDependencies": {
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "three": "^0.108.0"
   }
 }
