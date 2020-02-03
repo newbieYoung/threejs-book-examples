@@ -1,6 +1,7 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
 import Rubik from './Rubik.js'
 import TouchLine from './TouchLine.js'
+import Roll from './Roll.js'
 
 /**
  * 游戏主函数
@@ -108,6 +109,7 @@ export default class Main {
    * 初始化事件
    */
   initEvent() {
+    this.roll = new Roll(this);
     wx.onTouchStart(this.touchStart.bind(this));
     wx.onTouchMove(this.touchMove.bind(this));
     wx.onTouchEnd(this.touchEnd.bind(this));
@@ -122,6 +124,7 @@ export default class Main {
     if (this.touchLine.isHover(touch)) {
       this.touchLine.enable();
     }
+    this.roll.getIntersects(event);
   }
 
   /**

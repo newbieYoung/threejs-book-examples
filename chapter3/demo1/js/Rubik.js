@@ -96,7 +96,7 @@ export default class Rubik {
     }
 
     //外层透明容器
-    var width = BasicParams.num * BasicParams.len;
+    var width = BasicParams.num * BasicParams.len + 2; // 额外加入一定宽度，防止外层容器和魔方完全重叠
     var containerGeo = new THREE.BoxGeometry(width, width, width);
     var containerMat = new THREE.MeshBasicMaterial({ opacity: 0, transparent: true });
     this.container = new THREE.Mesh(containerGeo, containerMat);
