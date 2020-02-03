@@ -95,6 +95,13 @@ export default class Rubik {
       this.group.add(item);
     }
 
+    //外层透明容器
+    var width = BasicParams.num * BasicParams.len;
+    var containerGeo = new THREE.BoxGeometry(width, width, width);
+    var containerMat = new THREE.MeshBasicMaterial({ opacity: 0, transparent: true });
+    this.container = new THREE.Mesh(containerGeo, containerMat);
+    this.group.add(this.container);
+
     //进行一定的旋转变换保证三个面可视
     if (type == this.main.frontViewName) {
       this.group.rotateY(45 / 180 * Math.PI);
