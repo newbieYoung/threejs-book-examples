@@ -243,6 +243,82 @@ export default class Rubik {
   }
 
   /**
+   * 绕过点p的向量vector旋转一定角度
+   */
+  rotateAroundWorldAxis(p, vector, rad) {
+    vector.normalize();
+    var u = vector.x;
+    var v = vector.y;
+    var w = vector.z;
+
+    var a = p.x;
+    var b = p.y;
+    var c = p.z;
+
+    var matrix4 = new THREE.Matrix4();
+
+    matrix4.set(u * u + (v * v + w * w) * Math.cos(rad), u * v * (1 - Math.cos(rad)) - w * Math.sin(rad), u * w * (1 - Math.cos(rad)) + v * Math.sin(rad), (a * (v * v + w * w) - u * (b * v + c * w)) * (1 - Math.cos(rad)) + (b * w - c * v) * Math.sin(rad),
+      u * v * (1 - Math.cos(rad)) + w * Math.sin(rad), v * v + (u * u + w * w) * Math.cos(rad), v * w * (1 - Math.cos(rad)) - u * Math.sin(rad), (b * (u * u + w * w) - v * (a * u + c * w)) * (1 - Math.cos(rad)) + (c * u - a * w) * Math.sin(rad),
+      u * w * (1 - Math.cos(rad)) - v * Math.sin(rad), v * w * (1 - Math.cos(rad)) + u * Math.sin(rad), w * w + (u * u + v * v) * Math.cos(rad), (c * (u * u + v * v) - w * (a * u + b * v)) * (1 - Math.cos(rad)) + (a * v - b * u) * Math.sin(rad),
+      0, 0, 0, 1);
+
+    return matrix4;
+  }
+
+  /**
+   * 转动一定角度
+   */
+  rotate(elements, rollType, angle) {
+    var rotateMatrix = new THREE.Matrix4();//旋转矩阵
+    var origin = new THREE.Vector3(0, 0, 0);
+    //this.names = ['x','-x','y','-y','z','-z'];
+
+    switch (rollType) {
+      case 'x|y':
+      case '-x|-y':
+      case 'y|-x':
+      case '-y|x':
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wZLine, -angle);
+        break;
+      case 'x|-y':
+      case '-x|y':
+      case 'y|x':
+      case '-y|-x':
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wZLine, angle);
+        break;
+      case 'x|-z':
+      case '-x|z':
+      case 'z|x':
+      case '-z|-x':
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wYLine, -angle);
+        break;
+      case '-x|-z':
+      case 'x|z':
+      case 'z|-x':
+      case '-z|x':
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wYLine, angle);
+        break;
+      case 'y|-z':
+      case '-y|z':
+      case 'z|y':
+      case '-z|-y':
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wXLine, angle);
+        break;
+      case 'y|z':
+      case '-y|-z':
+      case 'z|-y':
+      case '-z|y':
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wXLine, -angle);
+        break;
+      default:
+        break;
+    }
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].applyMatrix(rotateMatrix);
+    }
+  }
+
+  /**
    * 计算转动角度
    */
   getRollAngle(startTouch, moveTouch, rollType) {
@@ -250,14 +326,14 @@ export default class Rubik {
     var width = this.main.width;
     switch (rollType) {
       case 'x|z': // 在 z 平面向 x 轴正方向滑动
-      case '-x|-z':
       case 'z|-x':
+      case '-x|-z':
       case '-z|x':
         angle = (moveTouch.clientX - startTouch.clientX) / width * 180;
         break;
       case '-x|z':
-      case 'x|-z':
       case '-z|-x':
+      case 'x|-z':
       case 'z|x':
         angle = (startTouch.clientX - moveTouch.clientX) / width * 180;
         break;
