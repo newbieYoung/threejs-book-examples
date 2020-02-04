@@ -80,6 +80,8 @@ export default class Rubik {
   constructor(main) {
     this.main = main;
 
+    this.initStatus = []; // 初始状态
+
     this.names = ['x','-x','y','-y','z','-z'];
     this.localLines = [
       new THREE.Vector3(1,0,0),
@@ -101,6 +103,14 @@ export default class Rubik {
     this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, BasicParams.num, BasicParams.len, BasicParams.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
+      this.initStatus.push({
+        x: item.position.x,
+        y: item.position.y,
+        z: item.position.z,
+        cubeIndex: item.id
+      });
+      item.cubeIndex = item.id;
+
       //小方块不再直接加入场景了，而是先加入集合，然后再把集合加入场景。
       //this.main.scene.add(item);
       this.group.add(item);
@@ -212,6 +222,24 @@ export default class Rubik {
     this.rollAbsAngle = null;
     this.rollStartTime = null;
     this.rollCurrentTime = null;
+  }
+
+  /**
+   * 更新位置索引
+   */
+  updateCubeIndex(elements) {
+    for (var i = 0; i < elements.length; i++) {
+      var temp1 = elements[i];
+      for (var j = 0; j < this.initStatus.length; j++) {
+        var temp2 = this.initStatus[j];
+        if (Math.abs(temp1.position.x - temp2.x) <= this.cubeLen / 2 &&
+          Math.abs(temp1.position.y - temp2.y) <= this.cubeLen / 2 &&
+          Math.abs(temp1.position.z - temp2.z) <= this.cubeLen / 2) {
+          temp1.cubeIndex = temp2.cubeIndex;
+          break;
+        }
+      }
+    }
   }
 
   /**
