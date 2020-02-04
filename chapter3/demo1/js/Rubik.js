@@ -219,54 +219,55 @@ export default class Rubik {
    */
   getRollAngle(startTouch, moveTouch, rollType) {
     var angle = 0;
+    var width = this.main.width;
     switch (rollType) {
       case 'x|z': // 在 z 平面向 x 轴正方向滑动
-      case 'z|-x':
       case '-x|-z':
+      case 'z|-x':
       case '-z|x':
-        angle = (moveTouch.clientX - startTouch.clientX) / window.innerWidth * 180;
+        angle = (moveTouch.clientX - startTouch.clientX) / width * 180;
         break;
       case '-x|z':
-      case '-z|-x':
       case 'x|-z':
+      case '-z|-x':
       case 'z|x':
-        angle = (startTouch.clientX - moveTouch.clientX) / window.innerWidth * 180;
+        angle = (startTouch.clientX - moveTouch.clientX) / width * 180;
         break;
       case '-y|z':
       case '-y|-x':
       case '-y|-z':
       case '-y|x':
-        angle = (moveTouch.clientY - startTouch.clientY) / window.innerWidth * 180;
+        angle = (moveTouch.clientY - startTouch.clientY) / width * 180;
         break;
       case 'y|z':
       case 'y|-x':
       case 'y|-z':
       case 'y|x':
-        angle = (startTouch.clientY - moveTouch.clientY) / window.innerWidth * 180;
+        angle = (startTouch.clientY - moveTouch.clientY) / width * 180;
         break;
       case 'z|y':
       case '-x|-y': 
         var u = new THREE.Vector2(moveTouch.clientX - startTouch.clientX, startTouch.clientY - moveTouch.clientY);
         var v = new THREE.Vector2(2, -1);
-        angle = u.dot(v) / v.length() / window.innerWidth * 180;
+        angle = u.dot(v) / v.length() / width * 180;
         break;
       case '-z|y':
       case 'x|-y':
         var u = new THREE.Vector2(moveTouch.clientX - startTouch.clientX, startTouch.clientY - moveTouch.clientY);
         var v = new THREE.Vector2(-2, 1);
-        angle = u.dot(v) / v.length() / window.innerWidth * 180;
+        angle = u.dot(v) / v.length() / width * 180;
         break;
       case 'x|y':
       case '-z|-y':
         var u = new THREE.Vector2(moveTouch.clientX - startTouch.clientX, startTouch.clientY - moveTouch.clientY);
         var v = new THREE.Vector2(2, 1);
-        angle = u.dot(v) / v.length() / window.innerWidth * 180;
+        angle = u.dot(v) / v.length() / width * 180;
         break;
       case '-x|y':
       case 'z|-y':
         var u = new THREE.Vector2(moveTouch.clientX - startTouch.clientX, startTouch.clientY - moveTouch.clientY);
         var v = new THREE.Vector2(-2, -1);
-        angle = u.dot(v) / v.length() / window.innerWidth * 180;
+        angle = u.dot(v) / v.length() / width * 180;
         break;
     }
     return (angle - this.rollAngle);
