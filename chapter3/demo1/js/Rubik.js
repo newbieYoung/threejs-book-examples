@@ -79,6 +79,17 @@ function faces(rgbaColor) {
 export default class Rubik {
   constructor(main) {
     this.main = main;
+
+    this.names = ['x','-x','y','-y','z','-z'];
+    this.localLines = [
+      new THREE.Vector3(1,0,0),
+      new THREE.Vector3(-1,0,0),
+      new THREE.Vector3(0,1,0),
+      new THREE.Vector3(0,-1,0),
+      new THREE.Vector3(0,0,1),
+      new THREE.Vector3(0,0,-1)
+    ]; //自身坐标系坐标轴向量
+    this.worldLines = []; //自身坐标系坐标轴向量在世界坐标系中的值
   }
 
   model(type) {
@@ -130,20 +141,64 @@ export default class Rubik {
    * 更新自身坐标系坐标轴向量在世界坐标系中的值
    */
   updateLocalAxisInWorld() {
-    var xLine = new THREE.Vector3(1, 0, 0);
-    var xLineAd = new THREE.Vector3(-1, 0, 0);
-    var yLine = new THREE.Vector3(0, 1, 0);
-    var yLineAd = new THREE.Vector3(0, -1, 0);
-    var zLine = new THREE.Vector3(0, 0, 1);
-    var zLineAd = new THREE.Vector3(0, 0, -1);
-
+    this.worldLines = [];
     var matrix = this.group.matrixWorld;
+    for(var i=0;i<this.localLines.length;i++){
+      var line = this.localLines[i];
+      this.worldLines.push(line.applyMatrix4(matrix));
+    }
+  }
+
+  /**
+   * 根据向量在世界坐标系中的值获取其名称
+   */
+  getWorldName(line){
+    for(var i=0;i<this.worldLines.length;i++){
+      if(line.equals(this.worldLines[i])){
+        return this.names[i];
+      }
+    }
+  }
+
+  /**
+   * 根据向量在自身坐标系中的值获取其名称
+   */
+  getLocalName(line){
+    for(var i=0;i<this.localLines.length;i++){
+      if(line.equals(this.localLines[i])){
+        return this.names[i]
+      }
+    }
+  }
+
+  /**
+   * 获取转动类型
+   */
+  getRollName(axis, normalize){
+    var faceName = this.getLocalName(normalize);
+    var direcName = this.getWorldName(axis);
+    return faceName+'|'+direcName;
+  }
+
+  /**
+   * 计算转动向量
+   */
+  getDirectionAxis(sub) {
+    this.updateCurLocalAxisInWorld();
     
-    this.xLine = xLine.applyMatrix4(matrix);
-    this.xLineAd = xLineAd.applyMatrix4(matrix);
-    this.yLine = yLine.applyMatrix4(matrix);
-    this.yLineAd = yLine.applyMatrix4(matrix);
-    this.zLine = zLine.applyMatrix4(matrix);
-    this.zLineAd = zLineAd.applyMatrix4(matrix);
+    var angles = [];
+    for (var i = 0; i < this.worldLines.length; i++){
+      var line = this.worldLines[i];
+      angles.push(sub.angleTo(line)); //计算两个向量夹角
+    }
+    
+    var min = 0;
+    for(var j = 1; j < angles.length; j++){
+      if(angles[j] < angles[min]){
+        min = j;
+      }
+    }
+
+    return this.worldLines[min].clone();
   }
 }
