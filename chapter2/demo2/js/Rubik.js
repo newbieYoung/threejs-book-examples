@@ -72,7 +72,7 @@ export default class Rubik {
       z: 0
     };
     this.orderNum = 3; //阶数
-    this.cubeLen = 50; //小方块尺寸
+    this.cubeLen = 50; //小方块边长
     this.colors = ['#ff6b02', '#dd422f',
         '#ffffff', '#fdcd02',
         '#3d81f7', '#019d53'

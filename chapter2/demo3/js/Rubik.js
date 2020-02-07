@@ -1,19 +1,5 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
 
-//基础模型参数
-const BasicParams = {
-  x: 0,
-  y: 0,
-  z: 0,
-  num: 3,
-  len: 50,
-  //右、左、上、下、前、后
-  colors: ['#ff6b02', '#dd422f',
-    '#ffffff', '#fdcd02',
-    '#3d81f7', '#019d53'
-  ]
-};
-
 /**
  * 简易魔方
  * x、y、z 魔方中心点坐标
@@ -79,6 +65,18 @@ function faces(rgbaColor) {
 export default class Rubik {
   constructor(main) {
     this.main = main;
+
+    this.center = { // 中心坐标
+      x: 0,
+      y: 0,
+      z: 0
+    };
+    this.orderNum = 3; //阶数
+    this.cubeLen = 50; //小方块边长
+    this.colors = ['#ff6b02', '#dd422f',
+      '#ffffff', '#fdcd02',
+      '#3d81f7', '#019d53'
+    ]; //六个面颜色，顺序为右、左、上、下、前、后
   }
 
   model(type) {
@@ -87,7 +85,7 @@ export default class Rubik {
     this.group.childType = type;
 
     //生成小方块
-    this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, BasicParams.num, BasicParams.len, BasicParams.colors);
+    this.cubes = SimpleCube(this.center.x, this.center.y, this.center.z, this.orderNum, this.cubeLen, this.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
       //小方块不再直接加入场景了，而是先加入集合，然后再把集合加入场景。
