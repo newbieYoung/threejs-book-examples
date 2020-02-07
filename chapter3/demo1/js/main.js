@@ -1,7 +1,7 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
 import Rubik from './Rubik.js'
 import TouchLine from './TouchLine.js'
-import Roll from './Roll.js'
+import Slide from './Slide.js'
 
 /**
  * 游戏主函数
@@ -109,7 +109,7 @@ export default class Main {
    * 初始化事件
    */
   initEvent() {
-    this.roll = new Roll(this);
+    this.slide = new Slide(this);
     wx.onTouchStart(this.touchStart.bind(this));
     wx.onTouchMove(this.touchMove.bind(this));
     wx.onTouchEnd(this.touchEnd.bind(this));
@@ -120,12 +120,18 @@ export default class Main {
    */
   touchStart(event) {
     var touch = event.touches[0];
-    if(!this.roll.isRotating && !this.roll.isSliding){//正在转动魔方时不能进行其它操作
+
+    var isFunc = true; //是否触发功能按钮
+    if(!this.slide.isRotating && !this.slide.isSliding){//正在转动魔方时不能进行其它操作
       if (this.touchLine.isHover(touch)) {
         this.touchLine.enable();
       } else {
-        this.roll.start(event);
+        isFunc = false;
       }
+    }
+
+    if (!this.slide.isRotating && !isFunc) { //没有触发功能按钮时，再考虑魔方转动
+      this.slide.start(event)
     }
   }
 
@@ -134,15 +140,21 @@ export default class Main {
    */
   touchMove(event) {
     var touch = event.touches[0];
-    if(!this.roll.isRotating && !this.roll.isSliding){ //正在转动魔方时不能进行其它操作
+
+    var isFunc = true; //是否触发功能按钮
+    if(!this.slide.isRotating && !this.slide.isSliding){ //正在转动魔方时不能进行其它操作
       if (this.touchLine.isActive) {
         this.touchLine.move(touch.clientY);
         var frontPercent = touch.clientY / window.innerHeight;
         var endPercent = 1 - frontPercent;
         this.rubikResize(frontPercent, endPercent);
       }else{
-        this.roll.move(event);
+        isFunc = false;
       }
+    }
+
+    if(!this.slide.isRotating && !isFunc){ //没有触发功能按钮时，再考虑魔方转动
+      this.slide.move(event)
     }
   }
 

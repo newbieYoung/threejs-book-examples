@@ -5,8 +5,6 @@ const BasicParams = {
   x: 0,
   y: 0,
   z: 0,
-  num: 3,
-  len: 50,
   //右、左、上、下、前、后
   colors: ['#ff6b02', '#dd422f',
     '#ffffff', '#fdcd02',
@@ -80,9 +78,11 @@ export default class Rubik {
   constructor(main) {
     this.main = main;
 
-    this.initStatus = []; // 初始状态
+    this.orderNum = 3;//默认三阶魔方
+    this.cubeLen = 50;//默认小方块尺寸
 
-    this.names = ['x','-x','y','-y','z','-z'];
+    this.initStatus = []; // 初始状态
+    this.names = ['x','-x','y','-y','z','-z']; // 坐标轴顺序
     this.localLines = [
       new THREE.Vector3(1,0,0),
       new THREE.Vector3(-1,0,0),
@@ -100,7 +100,7 @@ export default class Rubik {
     this.group.childType = type;
 
     //生成小方块
-    this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, BasicParams.num, BasicParams.len, BasicParams.colors);
+    this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, this.orderNum, this.cubeLen, BasicParams.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
       this.initStatus.push({
@@ -117,7 +117,7 @@ export default class Rubik {
     }
 
     //外层透明容器
-    var width = BasicParams.num * BasicParams.len + 2; // 额外加入一定宽度，防止外层容器和魔方完全重叠
+    var width = this.orderNum * this.cubeLen + 2; // 额外加入一定宽度，防止外层容器和魔方完全重叠
     var containerGeo = new THREE.BoxGeometry(width, width, width);
     var containerMat = new THREE.MeshBasicMaterial({ opacity: 0, transparent: true });
     this.container = new THREE.Mesh(containerGeo, containerMat);
@@ -131,6 +131,8 @@ export default class Rubik {
     }
     this.group.rotateOnAxis(new THREE.Vector3(1, 0, 1), 25 / 180 * Math.PI);
     this.main.scene.add(this.group);
+
+    this.getMinCubeIndex();
   }
 
   /**
@@ -154,7 +156,7 @@ export default class Rubik {
     this.worldLines = [];
     var matrix = this.group.matrixWorld;
     for(var i=0;i<this.localLines.length;i++){
-      var line = this.localLines[i];
+      var line = this.localLines[i].clone();
       this.worldLines.push(line.applyMatrix4(matrix));
     }
   }
@@ -194,7 +196,7 @@ export default class Rubik {
    * 计算转动向量
    */
   getDirectionAxis(sub) {
-    this.updateCurLocalAxisInWorld();
+    this.updateLocalAxisInWorld();
     
     var angles = [];
     for (var i = 0; i < this.worldLines.length; i++){
@@ -335,43 +337,44 @@ export default class Rubik {
   rotate(elements, slideType, angle) {
     var rotateMatrix = new THREE.Matrix4();//旋转矩阵
     var origin = new THREE.Vector3(0, 0, 0);
+    //this.names = ['x', '-x', 'y', '-y', 'z', '-z'];
 
     switch (slideType) {
       case 'x|y':
       case '-x|-y':
       case 'y|-x':
       case '-y|x':
-        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wZLine, -angle);
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.localLines[4], -angle); // z
         break;
       case 'x|-y':
       case '-x|y':
       case 'y|x':
       case '-y|-x':
-        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wZLine, angle);
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.localLines[4], angle); // z
         break;
       case 'x|-z':
       case '-x|z':
       case 'z|x':
       case '-z|-x':
-        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wYLine, -angle);
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.localLines[2], -angle); // y
         break;
       case '-x|-z':
       case 'x|z':
       case 'z|-x':
       case '-z|x':
-        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wYLine, angle);
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.localLines[2], angle); // y
         break;
       case 'y|-z':
       case '-y|z':
       case 'z|y':
       case '-z|-y':
-        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wXLine, angle);
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.localLines[0], angle); // x
         break;
       case 'y|z':
       case '-y|-z':
       case 'z|-y':
       case '-z|y':
-        rotateMatrix = this.rotateAroundWorldAxis(origin, this.wXLine, -angle);
+        rotateMatrix = this.rotateAroundWorldAxis(origin, this.localLines[0], -angle); // x
         break;
       default:
         break;
@@ -506,5 +509,11 @@ export default class Rubik {
   /**
    * 转动魔方
    */
-  
+  slide(startTouch, moveTouch){
+    var angle = this.getSlideAngle(startTouch[0], moveTouch[0], this.slideType);
+    this.rotate(this.slideElements, this.slideType, angle * Math.PI / 180);
+    this.slideAngle += angle;
+    this.slideAbsAngle += Math.abs(angle);
+    this.slideCurrentTime = new Date().getTime();
+  }
 }

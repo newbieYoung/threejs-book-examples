@@ -50,13 +50,18 @@ export default class Slide {
       if(!this.isSliding){ // 未手动转动
         this.getIntersects(event);
         if (this.intersect.length > 0) { // 操控魔方
+          this.isSliding = true; // 开始手动转动
           this.moveTouch = this.touch;
           this.movePoint = this.intersect;
           this.moveNormalize = this.normalize;
-          this.targetRubik.slideMove(this.startTouch, this.moveTouch, this.anotherRubik, this.startPoint, this.startNormalize, this.movePoint, this.moveNormalize);
+          this.targetRubik.initSlide(this.startPoint, this.startNormalize, this.movePoint, this.moveNormalize);
+          this.anotherRubik.cloneSlide(this.targetRubik);
+          this.targetRubik.slide(this.startTouch, this.moveTouch);
+          this.anotherRubik.slide(this.startTouch, this.moveTouch);
         }
       }else{
-
+        this.targetRubik.slide(this.startTouch, this.moveTouch);
+        this.anotherRubik.slide(this.startTouch, this.moveTouch);
       }
     }else{ // 不操控魔方
 
