@@ -1,17 +1,5 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
 
-//基础模型参数
-const BasicParams = {
-  x: 0,
-  y: 0,
-  z: 0,
-  //右、左、上、下、前、后
-  colors: ['#ff6b02', '#dd422f',
-    '#ffffff', '#fdcd02',
-    '#3d81f7', '#019d53'
-  ]
-};
-
 /**
  * 简易魔方
  * x、y、z 魔方中心点坐标
@@ -78,8 +66,17 @@ export default class Rubik {
   constructor(main) {
     this.main = main;
 
-    this.orderNum = 3;//默认三阶魔方
-    this.cubeLen = 50;//默认小方块尺寸
+    this.center = { // 中心坐标
+      x: 0,
+      y: 0,
+      z: 0
+    };
+    this.orderNum = 3; //阶数
+    this.cubeLen = 50; //小方块边长
+    this.colors = ['#ff6b02', '#dd422f',
+      '#ffffff', '#fdcd02',
+      '#3d81f7', '#019d53'
+    ]; //六个面颜色，顺序为右、左、上、下、前、后
 
     this.initStatus = []; // 初始状态
     this.names = ['x','-x','y','-y','z','-z']; // 坐标轴顺序
@@ -100,7 +97,7 @@ export default class Rubik {
     this.group.childType = type;
 
     //生成小方块
-    this.cubes = SimpleCube(BasicParams.x, BasicParams.y, BasicParams.z, this.orderNum, this.cubeLen, BasicParams.colors);
+    this.cubes = SimpleCube(this.center.x, this.center.y, this.center.z, this.orderNum, this.cubeLen, this.colors);
     for (var i = 0; i < this.cubes.length; i++) {
       var item = this.cubes[i];
       this.initStatus.push({
