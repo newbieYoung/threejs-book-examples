@@ -182,9 +182,9 @@ export default class Rubik {
   }
 
   /**
-   * 获取转动类型
+   * 计算转动类型
    */
-  getRollType(axis, normalize){
+  getSlideType(axis, normalize){
     var faceName = this.getLocalName(normalize);
     var direcName = this.getWorldName(axis);
     return direcName + '|' + faceName;
@@ -215,17 +215,70 @@ export default class Rubik {
   /**
    * 转动参数重置
    */
-  rollReset() {
-    this.rollElements = null;
-    this.rollType = null;
-    this.rollAngle = null;
-    this.rollAbsAngle = null;
-    this.rollStartTime = null;
-    this.rollCurrentTime = null;
+  slideReset() {
+    this.slideElements = null;
+    this.slideType = null;
+    this.slideAngle = null;
+    this.slideAbsAngle = null;
+    this.slideStartTime = null;
+    this.slideCurrentTime = null;
   }
 
   /**
-   * 更新位置索引
+   * 初始化转动
+   */
+  initSlide(startPoint, startNormalize, movePoint, moveNormalize){
+    var sub = movePoint[0].point.sub(startPoint[0].point);//计算滑动向量
+    if (sub.length() > 0) { // 滑动距离大于0
+      var axis = this.getDirectionAxis(sub);//获得转动方向向量
+      var cudeIndex = startPoint[0].object.cubeIndex; // 射线投射小方块序号
+      this.slideType = this.getSlideType(axis, startNormalize[0]); //根据转动方向和射线投射平面法向量区分转动情况
+      this.slideAngle = 0;
+      this.slideAbsAngle = 0;
+      this.slideStartTime = new Date().getTime();
+      this.slideCurrentTime = new Date().getTime();
+
+      if (moveNormalize.length >= 2 && moveNormalize[0].equals(moveNormalize[1])) {//同一表面多指操作
+        this.slideElements = this.cubes;
+      } else {
+        this.slideElements = this.getSlideElements(cudeIndex, this.slideType);
+      }
+    }
+  }
+
+  /**
+   * 克隆转动
+   */
+  cloneSlide(rubik){
+    if(rubik.slideElements && rubik.slideElements.length > 0){
+      this.slideType = rubik.slideType;
+      this.slideAngle = rubik.slideAngle;
+      this.slideAbsAngle = rubik.slideAbsAngle;
+      this.slideStartTime = rubik.slideStartTime;
+      this.slideCurrentTime = rubik.slideCurrentTime;
+      this.slideElements = [];
+      for (var i = 0; i < rubik.slideElements.length; i++) {
+        this.slideElements.push(rubik.getCubeByIndex(rubik.slideElements[i].cubeIndex - rubik.minCubeIndex));
+      }
+    }
+  }
+
+  /**
+   * 根据索引获取方块
+   */
+  getCubeByIndex(index) {
+    var cube;
+    for (var i = 0; i < this.cubes.length; i++) {
+      if (this.cubes[i].cubeIndex == index + this.minCubeIndex) {
+        cube = this.cubes[i];
+        break;
+      }
+    }
+    return cube;
+  }
+
+  /**
+   * 更新索引
    */
   updateCubeIndex(elements) {
     for (var i = 0; i < elements.length; i++) {
@@ -240,6 +293,17 @@ export default class Rubik {
         }
       }
     }
+  }
+
+  /**
+   * 计算最小索引值
+   */
+  getMinCubeIndex() {
+    var ids = [];
+    for (var i = 0; i < this.cubes.length; i++) {
+      ids.push(this.cubes[i].cubeIndex);
+    }
+    this.minCubeIndex = Math.min.apply(null, ids);
   }
 
   /**
@@ -268,12 +332,11 @@ export default class Rubik {
   /**
    * 转动一定角度
    */
-  rotate(elements, rollType, angle) {
+  rotate(elements, slideType, angle) {
     var rotateMatrix = new THREE.Matrix4();//旋转矩阵
     var origin = new THREE.Vector3(0, 0, 0);
-    //this.names = ['x','-x','y','-y','z','-z'];
 
-    switch (rollType) {
+    switch (slideType) {
       case 'x|y':
       case '-x|-y':
       case 'y|-x':
@@ -319,12 +382,75 @@ export default class Rubik {
   }
 
   /**
+   * 计算转动元素
+   */
+  getSlideElements(cubeIndex, slideType){
+    var targetIndex = cubeIndex;
+    targetIndex = targetIndex - this.minCubeIndex;
+    var numI = parseInt(targetIndex / Math.pow(this.orderNum, 2));
+    var numJ = targetIndex % Math.pow(this.orderNum, 2);
+    var elements = [];
+    //根据绘制时的规律判断 no = i * Math.pow(this.orderNum, 2)+j
+    switch (slideType) {
+      case 'x|y':
+      case 'x|-y':
+      case '-x|y':
+      case '-x|-y':
+      case 'y|x':
+      case 'y|-x':
+      case '-y|x':
+      case '-y|-x':
+        for (var i = 0; i < this.cubes.length; i++) {
+          var tempId = this.cubes[i].cubeIndex - this.minCubeIndex;
+          if (numI === parseInt(tempId / Math.pow(this.orderNum, 2))) {
+            elements.push(this.cubes[i]);
+          }
+        }
+        break;
+      case 'x|z':
+      case 'x|-z':
+      case '-x|z':
+      case '-x|-z':
+      case 'z|x':
+      case 'z|-x':
+      case '-z|x':
+      case '-z|-x':
+        for (var i = 0; i < this.cubes.length; i++) {
+          var tempId = this.cubes[i].cubeIndex - this.minCubeIndex;
+          if (parseInt(numJ / this.orderNum) === parseInt(tempId % Math.pow(this.orderNum, 2) / this.orderNum)) {
+            elements.push(this.cubes[i]);
+          }
+        }
+        break;
+      case 'y|z':
+      case 'y|-z':
+      case '-y|z':
+      case '-y|-z':
+      case 'z|y':
+      case 'z|-y':
+      case '-z|y':
+      case '-z|-y':
+        for (var i = 0; i < this.cubes.length; i++) {
+          var tempId = this.cubes[i].cubeIndex - this.minCubeIndex;
+          if (tempId % Math.pow(this.orderNum, 2) % this.orderNum === numJ % this.orderNum) {
+            elements.push(this.cubes[i]);
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    return elements;
+  }
+
+  /**
    * 计算转动角度
    */
-  getRollAngle(startTouch, moveTouch, rollType) {
+  getSlideAngle(startTouch, moveTouch, slideType) {
     var angle = 0;
     var width = this.main.width;
-    switch (rollType) {
+    switch (slideType) {
       case 'x|z': // 在 z 平面向 x 轴正方向滑动
       case 'z|-x':
       case '-x|-z':
@@ -374,6 +500,11 @@ export default class Rubik {
         angle = u.dot(v) / v.length() / width * 180;
         break;
     }
-    return (angle - this.rollAngle);
+    return (angle - this.slideAngle);
   }
+
+  /**
+   * 转动魔方
+   */
+  
 }

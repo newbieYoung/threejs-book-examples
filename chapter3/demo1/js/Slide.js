@@ -1,6 +1,6 @@
 import * as THREE from '../miniprogram_npm/three/index.js'
 
-export default class Roll {
+export default class Slide {
 
   constructor(main) {
     this.main = main;
@@ -16,8 +16,8 @@ export default class Roll {
     this.normalize = null; //射线投射平面法向量
     this.targetRubik = null; //目标魔方
     this.anotherRubik = null; //其它魔方
-    this.isRotating = false; //是否正在转动魔方
-    this.isSliding = false; //魔方是否在滑动
+    this.isRotating = false; //是否正在自动转动
+    this.isSliding = false; //是否在手动转动
     this.touch = null;
     this.startTouch = null;
     this.startPoint = null;
@@ -40,7 +40,27 @@ export default class Roll {
       this.startTouch = event.touches;
       this.startPoint = new THREE.Vector2(this.startTouch[0].clientX, this.startTouch[0].clientY);
     }
-    console.log(this.intersect);
+  }
+
+  /**
+   * 滑动
+   */
+  move(event){
+    if(this.startNormalize && this.startNormalize.length > 0){ // 操控魔方
+      if(!this.isSliding){ // 未手动转动
+        this.getIntersects(event);
+        if (this.intersect.length > 0) { // 操控魔方
+          this.moveTouch = this.touch;
+          this.movePoint = this.intersect;
+          this.moveNormalize = this.normalize;
+          this.targetRubik.slideMove(this.startTouch, this.moveTouch, this.anotherRubik, this.startPoint, this.startNormalize, this.movePoint, this.moveNormalize);
+        }
+      }else{
+
+      }
+    }else{ // 不操控魔方
+
+    }
   }
 
   /**

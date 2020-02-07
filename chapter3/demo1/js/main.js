@@ -120,10 +120,12 @@ export default class Main {
    */
   touchStart(event) {
     var touch = event.touches[0];
-    if (this.touchLine.isHover(touch)) {
-      this.touchLine.enable();
-    }else{
-      this.roll.start(event);
+    if(!this.roll.isRotating && !this.roll.isSliding){//正在转动魔方时不能进行其它操作
+      if (this.touchLine.isHover(touch)) {
+        this.touchLine.enable();
+      } else {
+        this.roll.start(event);
+      }
     }
   }
 
@@ -132,11 +134,15 @@ export default class Main {
    */
   touchMove(event) {
     var touch = event.touches[0];
-    if (this.touchLine.isActive) {
-      this.touchLine.move(touch.clientY);
-      var frontPercent = touch.clientY / window.innerHeight;
-      var endPercent = 1 - frontPercent;
-      this.rubikResize(frontPercent, endPercent);
+    if(!this.roll.isRotating && !this.roll.isSliding){ //正在转动魔方时不能进行其它操作
+      if (this.touchLine.isActive) {
+        this.touchLine.move(touch.clientY);
+        var frontPercent = touch.clientY / window.innerHeight;
+        var endPercent = 1 - frontPercent;
+        this.rubikResize(frontPercent, endPercent);
+      }else{
+        this.roll.move(event);
+      }
     }
   }
 
