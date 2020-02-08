@@ -12,6 +12,7 @@ export default class Slide {
    * 重置
    */
   reset(){
+    this.endCount = 0;
     this.intersect = null; //射线投射元素
     this.normalize = null; //射线投射平面法向量
     this.targetRubik = null; //目标魔方
@@ -57,14 +58,36 @@ export default class Slide {
           this.targetRubik.initSlide(this.startPoint, this.startNormalize, this.movePoint, this.moveNormalize);
           this.anotherRubik.cloneSlide(this.targetRubik);
           this.targetRubik.slide(this.startTouch, this.moveTouch); // 使用屏幕坐标判断转动角度
-          this.anotherRubik.slide(this.startTouch, this.moveTouch);
+          this.anotherRubik.cloneSlide(this.targetRubik);
         }
       }else{
-        this.targetRubik.slide(this.startTouch, event.touches);
-        this.anotherRubik.slide(this.startTouch, event.touches);
+        this.moveTouch = event.touches;
+        this.targetRubik.slide(this.startTouch, this.moveTouch);
+        this.anotherRubik.cloneSlide(this.targetRubik);
       }
     }else{ // 不操控魔方
 
+    }
+  }
+
+  /**
+   * 结束
+   */
+  end(){
+    var self = this;
+    this.isSliding = false;
+    this.isRotating = true;
+    this.targetRubik.slideEnd(this.finish.bind(this));
+    this.anotherRubik.slideEnd(this.finish.bind(this));
+  }
+
+  /**
+   * 完成
+   */
+  finish(){
+    this.endCount++;
+    if(this.endCount>=2){
+      this.reset();
     }
   }
 

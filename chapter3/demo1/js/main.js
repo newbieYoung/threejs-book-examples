@@ -160,6 +160,10 @@ export default class Main {
    * 触摸结束
    */
   touchEnd() {
-    this.touchLine.disable();
+    if(this.slide.isSliding && !this.slide.isRotating){
+      this.slide.end();
+    }else{
+      this.touchLine.disable();
+    }
   }
 }

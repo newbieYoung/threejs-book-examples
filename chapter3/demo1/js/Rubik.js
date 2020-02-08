@@ -78,6 +78,8 @@ export default class Rubik {
       '#3d81f7', '#019d53'
     ]; //六个面颜色，顺序为右、左、上、下、前、后
 
+    this.slideLimitAngle = 15; //自动转动阀值，小于该阀值复位
+    this.slideMinSpeed = 0.3; //自动转动最小速度
     this.initStatus = []; // 初始状态
     this.names = ['x','-x','y','-y','z','-z']; // 坐标轴顺序
     this.localLines = [
@@ -252,10 +254,14 @@ export default class Rubik {
   }
 
   /**
-   * 克隆转动
+   * 克隆转动状态
    */
   cloneSlide(rubik){
     if(rubik.slideElements && rubik.slideElements.length > 0){
+      var angle = 0;
+      if(rubik.slideAngle && this.slideAngle){
+        angle = rubik.slideAngle - this.slideAngle;
+      }
       this.slideType = rubik.slideType;
       this.slideAngle = rubik.slideAngle;
       this.slideAbsAngle = rubik.slideAbsAngle;
@@ -263,7 +269,10 @@ export default class Rubik {
       this.slideCurrentTime = rubik.slideCurrentTime;
       this.slideElements = [];
       for (var i = 0; i < rubik.slideElements.length; i++) {
-        this.slideElements.push(rubik.getCubeByIndex(rubik.slideElements[i].cubeIndex - rubik.minCubeIndex));
+        this.slideElements.push(this.getCubeByIndex(rubik.slideElements[i].cubeIndex - rubik.minCubeIndex));
+      }
+      if(angle != 0){
+        this.rotate(this.slideElements, this.slideType, angle * Math.PI / 180);
       }
     }
   }
@@ -312,7 +321,7 @@ export default class Rubik {
   }
 
   /**
-   * 绕过点p的向量vector旋转一定角度
+   * 绕过点 p 的向量 vector 旋转一定角度
    */
   rotateAroundWorldAxis(p, vector, rad) {
     vector.normalize();
@@ -340,7 +349,6 @@ export default class Rubik {
   rotate(elements, slideType, angle) {
     var rotateMatrix = new THREE.Matrix4();//旋转矩阵
     var origin = new THREE.Vector3(0, 0, 0);
-    //this.names = ['x', '-x', 'y', '-y', 'z', '-z'];
 
     switch (slideType) {
       case 'x|y':
@@ -518,5 +526,73 @@ export default class Rubik {
     this.slideAngle += angle;
     this.slideAbsAngle += Math.abs(angle);
     this.slideCurrentTime = new Date().getTime();
+  }
+
+  /**
+   * 手动操作结束
+   */
+  slideEnd(callback){
+    var angle = this.slideAngle % 90;
+    var endAngle = parseInt(this.slideAngle / 90) * 90;
+    if (Math.abs(angle) >= this.slideLimitAngle) { //大于等于自动转动阀值
+      endAngle += 90 * angle / Math.abs(angle);
+    }
+
+    //开始自动转动动画
+    var rotateAngle = endAngle - this.slideAngle;
+    var rotateSpeed = this.slideAbsAngle / (this.slideCurrentTime - this.slideStartTime); // 手指滑动旋转速度
+    //rotateSpeed = rotateSpeed < this.slideMinSpeed ? this.slideMinSpeed : rotateSpeed;
+    var totalTime = Math.abs(rotateAngle) / rotateSpeed;
+    //console.log(totalTime+' '+rotateAngle+' '+this.slideAngle);
+
+    var self = this;
+    if (totalTime > 0) {
+      requestAnimationFrame(function (timestamp) {
+        self.rotateAnimation(self.slideElements, self.slideType, timestamp, 0, 0, function () {
+          self.updateCubeIndex(self.slideElements);
+          self.slideReset();
+          if (callback != null) {
+            callback();
+          }
+        }, totalTime, rotateAngle);
+      });
+    }else{
+      self.updateCubeIndex(self.slideElements);
+      self.slideReset();
+      if (callback != null) {
+        callback();
+      }
+    }
+  }
+
+  /**
+   * 转动动画
+   */
+  rotateAnimation(elements, slideType, currentstamp, startstamp, laststamp, callback, totalTime, rotateAngle) {
+    var isAnimationEnd = false; //动画是否结束
+    if (rotateAngle == null) { //转动动画角度默认 90 度
+      rotateAngle = 90;
+    }
+
+    if (startstamp == 0) {
+      startstamp = currentstamp;
+      laststamp = currentstamp;
+    }
+    if (currentstamp - startstamp >= totalTime) {
+      isAnimationEnd = true;
+      currentstamp = startstamp + totalTime;
+    }
+
+    var self = this;
+    var angle = rotateAngle * Math.PI / 180 * (currentstamp - laststamp) / totalTime;
+    //console.log(currentstamp+' '+angle * 180 / Math.PI);
+    this.rotate(elements, slideType, angle);
+    if (!isAnimationEnd) {
+      requestAnimationFrame(function (timestamp) {
+        self.rotateAnimation(elements, slideType, timestamp, startstamp, currentstamp, callback, totalTime, rotateAngle);
+      });
+    } else {
+      callback(); // 动画结束回调
+    }
   }
 }
