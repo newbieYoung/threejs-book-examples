@@ -79,7 +79,6 @@ export default class Rubik {
     ]; //六个面颜色，顺序为右、左、上、下、前、后
 
     this.slideLimitAngle = 15; //自动转动阀值，小于该阀值复位
-    this.slideMinSpeed = 0.3; //自动转动最小速度
     this.initStatus = []; // 初始状态
     this.names = ['x','-x','y','-y','z','-z']; // 坐标轴顺序
     this.localLines = [
@@ -259,7 +258,9 @@ export default class Rubik {
   cloneSlide(rubik){
     if(rubik.slideElements && rubik.slideElements.length > 0){
       var angle = 0;
-      if(rubik.slideAngle && this.slideAngle){
+      if(!this.slideAngle){
+        angle = rubik.slideAngle;
+      }else{
         angle = rubik.slideAngle - this.slideAngle;
       }
       this.slideType = rubik.slideType;
@@ -295,15 +296,17 @@ export default class Rubik {
    * 更新索引
    */
   updateCubeIndex(elements) {
-    for (var i = 0; i < elements.length; i++) {
-      var temp1 = elements[i];
-      for (var j = 0; j < this.initStatus.length; j++) {
-        var temp2 = this.initStatus[j];
-        if (Math.abs(temp1.position.x - temp2.x) <= this.cubeLen / 2 &&
-          Math.abs(temp1.position.y - temp2.y) <= this.cubeLen / 2 &&
-          Math.abs(temp1.position.z - temp2.z) <= this.cubeLen / 2) {
-          temp1.cubeIndex = temp2.cubeIndex;
-          break;
+    if(elements && elements.length>0){
+      for (var i = 0; i < elements.length; i++) {
+        var temp1 = elements[i];
+        for (var j = 0; j < this.initStatus.length; j++) {
+          var temp2 = this.initStatus[j];
+          if (Math.abs(temp1.position.x - temp2.x) <= this.cubeLen / 2 &&
+            Math.abs(temp1.position.y - temp2.y) <= this.cubeLen / 2 &&
+            Math.abs(temp1.position.z - temp2.z) <= this.cubeLen / 2) {
+            temp1.cubeIndex = temp2.cubeIndex;
+            break;
+          }
         }
       }
     }
@@ -390,8 +393,10 @@ export default class Rubik {
       default:
         break;
     }
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].applyMatrix(rotateMatrix);
+    if(elements && elements.length>0){
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].applyMatrix(rotateMatrix);
+      }
     }
   }
 
@@ -541,27 +546,19 @@ export default class Rubik {
     //开始自动转动动画
     var rotateAngle = endAngle - this.slideAngle;
     var rotateSpeed = this.slideAbsAngle / (this.slideCurrentTime - this.slideStartTime); // 手指滑动旋转速度
-    rotateSpeed = rotateSpeed < this.slideMinSpeed ? this.slideMinSpeed : rotateSpeed;
     var totalTime = Math.abs(rotateAngle) / rotateSpeed;
+    totalTime = totalTime>0?totalTime:50; // 动画时间计算异常则默认为 50 毫秒
 
     var self = this;
-    if (totalTime > 0) {
-      requestAnimationFrame(function (timestamp) {
-        self.rotateAnimation(self.slideElements, self.slideType, timestamp, 0, 0, function () {
-          self.updateCubeIndex(self.slideElements);
-          self.slideReset();
-          if (callback != null) {
-            callback();
-          }
-        }, totalTime, rotateAngle);
-      });
-    }else{
-      self.updateCubeIndex(self.slideElements);
-      self.slideReset();
-      if (callback != null) {
-        callback();
-      }
-    }
+    requestAnimationFrame(function (timestamp) {
+      self.rotateAnimation(self.slideElements, self.slideType, timestamp, 0, 0, function () {
+        self.updateCubeIndex(self.slideElements);
+        self.slideReset();
+        if (callback != null) {
+          callback();
+        }
+      }, totalTime, rotateAngle);
+    });
   }
 
   /**
