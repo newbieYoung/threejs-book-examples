@@ -56,12 +56,12 @@ export default class Slide {
           this.moveNormalize = this.normalize;
           this.targetRubik.initSlide(this.startPoint, this.startNormalize, this.movePoint, this.moveNormalize);
           this.anotherRubik.cloneSlide(this.targetRubik);
-          this.targetRubik.slide(this.startTouch, this.moveTouch);
+          this.targetRubik.slide(this.startTouch, this.moveTouch); // 使用屏幕坐标判断转动角度
           this.anotherRubik.slide(this.startTouch, this.moveTouch);
         }
       }else{
-        this.targetRubik.slide(this.startTouch, this.moveTouch);
-        this.anotherRubik.slide(this.startTouch, this.moveTouch);
+        this.targetRubik.slide(this.startTouch, event.touches);
+        this.anotherRubik.slide(this.startTouch, event.touches);
       }
     }else{ // 不操控魔方
 

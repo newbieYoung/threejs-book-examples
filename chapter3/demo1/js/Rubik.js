@@ -152,9 +152,15 @@ export default class Rubik {
   updateLocalAxisInWorld() {
     this.worldLines = [];
     var matrix = this.group.matrixWorld;
+
+    var origin = new THREE.Vector3(0, 0, 0);
+    origin.applyMatrix4(matrix);
+
     for(var i=0;i<this.localLines.length;i++){
-      var line = this.localLines[i].clone();
-      this.worldLines.push(line.applyMatrix4(matrix));
+      var lineEndPoint = this.localLines[i].clone();
+      lineEndPoint.applyMatrix4(matrix);
+
+      this.worldLines.push(lineEndPoint.sub(origin));
     }
   }
 

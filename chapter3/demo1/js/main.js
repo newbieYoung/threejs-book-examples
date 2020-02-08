@@ -121,12 +121,11 @@ export default class Main {
   touchStart(event) {
     var touch = event.touches[0];
 
-    var isFunc = true; //是否触发功能按钮
+    var isFunc = false; //是否触发功能按钮
     if(!this.slide.isRotating && !this.slide.isSliding){//正在转动魔方时不能进行其它操作
       if (this.touchLine.isHover(touch)) {
         this.touchLine.enable();
-      } else {
-        isFunc = false;
+        isFunc = true;
       }
     }
 
@@ -141,18 +140,17 @@ export default class Main {
   touchMove(event) {
     var touch = event.touches[0];
 
-    var isFunc = true; //是否触发功能按钮
+    var isFunc = false; //是否触发功能按钮
     if(!this.slide.isRotating && !this.slide.isSliding){ //正在转动魔方时不能进行其它操作
       if (this.touchLine.isActive) {
         this.touchLine.move(touch.clientY);
         var frontPercent = touch.clientY / window.innerHeight;
         var endPercent = 1 - frontPercent;
         this.rubikResize(frontPercent, endPercent);
-      }else{
-        isFunc = false;
+        isFunc = true;
       }
     }
-
+    
     if(!this.slide.isRotating && !isFunc){ //没有触发功能按钮时，再考虑魔方转动
       this.slide.move(event)
     }
