@@ -541,9 +541,8 @@ export default class Rubik {
     //开始自动转动动画
     var rotateAngle = endAngle - this.slideAngle;
     var rotateSpeed = this.slideAbsAngle / (this.slideCurrentTime - this.slideStartTime); // 手指滑动旋转速度
-    //rotateSpeed = rotateSpeed < this.slideMinSpeed ? this.slideMinSpeed : rotateSpeed;
+    rotateSpeed = rotateSpeed < this.slideMinSpeed ? this.slideMinSpeed : rotateSpeed;
     var totalTime = Math.abs(rotateAngle) / rotateSpeed;
-    //console.log(totalTime+' '+rotateAngle+' '+this.slideAngle);
 
     var self = this;
     if (totalTime > 0) {
@@ -585,7 +584,6 @@ export default class Rubik {
 
     var self = this;
     var angle = rotateAngle * Math.PI / 180 * (currentstamp - laststamp) / totalTime;
-    //console.log(currentstamp+' '+angle * 180 / Math.PI);
     this.rotate(elements, slideType, angle);
     if (!isAnimationEnd) {
       requestAnimationFrame(function (timestamp) {
