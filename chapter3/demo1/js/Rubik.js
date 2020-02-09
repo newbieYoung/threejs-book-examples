@@ -80,14 +80,14 @@ export default class Rubik {
 
     this.slideLimitAngle = 15; //自动转动阀值，小于该阀值复位
     this.initStatus = []; // 初始状态
-    this.names = ['x','-x','y','-y','z','-z']; // 坐标轴顺序
+    this.names = ['x', '-x', 'y', '-y', 'z', '-z']; // 坐标轴顺序
     this.localLines = [
-      new THREE.Vector3(1,0,0),
-      new THREE.Vector3(-1,0,0),
-      new THREE.Vector3(0,1,0),
-      new THREE.Vector3(0,-1,0),
-      new THREE.Vector3(0,0,1),
-      new THREE.Vector3(0,0,-1)
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(-1, 0, 0),
+      new THREE.Vector3(0, 1, 0),
+      new THREE.Vector3(0, -1, 0),
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(0, 0, -1)
     ]; //自身坐标系坐标轴向量
     this.worldLines = []; //自身坐标系坐标轴向量在世界坐标系中的值
   }
@@ -117,7 +117,10 @@ export default class Rubik {
     //外层透明容器
     var width = this.orderNum * this.cubeLen + 2; // 额外加入一定宽度，防止外层容器和魔方完全重叠
     var containerGeo = new THREE.BoxGeometry(width, width, width);
-    var containerMat = new THREE.MeshBasicMaterial({ opacity: 0, transparent: true });
+    var containerMat = new THREE.MeshBasicMaterial({
+      opacity: 0,
+      transparent: true
+    });
     this.container = new THREE.Mesh(containerGeo, containerMat);
     this.group.add(this.container);
 
@@ -157,7 +160,7 @@ export default class Rubik {
     var origin = new THREE.Vector3(0, 0, 0);
     origin.applyMatrix4(matrix);
 
-    for(var i=0;i<this.localLines.length;i++){
+    for (var i = 0; i < this.localLines.length; i++) {
       var lineEndPoint = this.localLines[i].clone();
       lineEndPoint.applyMatrix4(matrix);
 
@@ -168,9 +171,9 @@ export default class Rubik {
   /**
    * 根据坐标轴向量在世界坐标系中的值获取其名称
    */
-  getWorldName(line){
-    for(var i=0;i<this.worldLines.length;i++){
-      if(line.equals(this.worldLines[i])){
+  getWorldName(line) {
+    for (var i = 0; i < this.worldLines.length; i++) {
+      if (line.equals(this.worldLines[i])) {
         return this.names[i];
       }
     }
@@ -179,9 +182,9 @@ export default class Rubik {
   /**
    * 根据坐标轴向量在自身坐标系中的值获取其名称
    */
-  getLocalName(line){
-    for(var i=0;i<this.localLines.length;i++){
-      if(line.equals(this.localLines[i])){
+  getLocalName(line) {
+    for (var i = 0; i < this.localLines.length; i++) {
+      if (line.equals(this.localLines[i])) {
         return this.names[i]
       }
     }
@@ -190,7 +193,7 @@ export default class Rubik {
   /**
    * 计算转动类型
    */
-  getSlideType(axis, normalize){
+  getSlideType(axis, normalize) {
     var faceName = this.getLocalName(normalize);
     var direcName = this.getWorldName(axis);
     return direcName + '|' + faceName;
@@ -201,16 +204,16 @@ export default class Rubik {
    */
   getDirectionAxis(sub) {
     this.updateLocalAxisInWorld();
-    
+
     var angles = [];
-    for (var i = 0; i < this.worldLines.length; i++){
+    for (var i = 0; i < this.worldLines.length; i++) {
       var line = this.worldLines[i];
       angles.push(sub.angleTo(line)); //计算两个向量夹角
     }
-    
+
     var min = 0;
-    for(var j = 1; j < angles.length; j++){
-      if(angles[j] < angles[min]){
+    for (var j = 1; j < angles.length; j++) {
+      if (angles[j] < angles[min]) {
         min = j;
       }
     }
@@ -233,10 +236,10 @@ export default class Rubik {
   /**
    * 初始化转动
    */
-  initSlide(startPoint, startNormalize, movePoint, moveNormalize){
-    var sub = movePoint[0].point.sub(startPoint[0].point);//计算滑动向量
+  initSlide(startPoint, startNormalize, movePoint, moveNormalize) {
+    var sub = movePoint[0].point.sub(startPoint[0].point); //计算滑动向量
     if (sub.length() > 0) { // 滑动距离大于0
-      var axis = this.getDirectionAxis(sub);//获得转动方向向量
+      var axis = this.getDirectionAxis(sub); //获得转动方向向量
       var cudeIndex = startPoint[0].object.cubeIndex; // 射线投射小方块序号
       this.slideType = this.getSlideType(axis, startNormalize[0]); //根据转动方向和射线投射平面法向量区分转动情况
       this.slideAngle = 0;
@@ -244,7 +247,7 @@ export default class Rubik {
       this.slideStartTime = new Date().getTime();
       this.slideCurrentTime = new Date().getTime();
 
-      if (moveNormalize.length >= 2 && moveNormalize[0].equals(moveNormalize[1])) {//同一表面多指操作
+      if (moveNormalize.length >= 2 && moveNormalize[0].equals(moveNormalize[1])) { //同一表面多指操作
         this.slideElements = this.cubes;
       } else {
         this.slideElements = this.getSlideElements(cudeIndex, this.slideType);
@@ -255,12 +258,12 @@ export default class Rubik {
   /**
    * 克隆转动状态
    */
-  cloneSlide(rubik){
-    if(rubik.slideElements && rubik.slideElements.length > 0){
+  cloneSlide(rubik) {
+    if (rubik.slideElements && rubik.slideElements.length > 0) {
       var angle = 0;
-      if(!this.slideAngle){
+      if (!this.slideAngle) {
         angle = rubik.slideAngle;
-      }else{
+      } else {
         angle = rubik.slideAngle - this.slideAngle;
       }
       this.slideType = rubik.slideType;
@@ -272,7 +275,7 @@ export default class Rubik {
       for (var i = 0; i < rubik.slideElements.length; i++) {
         this.slideElements.push(this.getCubeByIndex(rubik.slideElements[i].cubeIndex - rubik.minCubeIndex));
       }
-      if(angle != 0){
+      if (angle != 0) {
         this.rotate(this.slideElements, this.slideType, angle * Math.PI / 180);
       }
     }
@@ -296,7 +299,7 @@ export default class Rubik {
    * 更新索引
    */
   updateCubeIndex(elements) {
-    if(elements && elements.length>0){
+    if (elements && elements.length > 0) {
       for (var i = 0; i < elements.length; i++) {
         var temp1 = elements[i];
         for (var j = 0; j < this.initStatus.length; j++) {
@@ -350,7 +353,7 @@ export default class Rubik {
    * 转动一定角度
    */
   rotate(elements, slideType, angle) {
-    var rotateMatrix = new THREE.Matrix4();//旋转矩阵
+    var rotateMatrix = new THREE.Matrix4(); //旋转矩阵
     var origin = new THREE.Vector3(0, 0, 0);
 
     switch (slideType) {
@@ -393,7 +396,7 @@ export default class Rubik {
       default:
         break;
     }
-    if(elements && elements.length>0){
+    if (elements && elements.length > 0) {
       for (var i = 0; i < elements.length; i++) {
         elements[i].applyMatrix(rotateMatrix);
       }
@@ -403,7 +406,7 @@ export default class Rubik {
   /**
    * 计算转动元素
    */
-  getSlideElements(cubeIndex, slideType){
+  getSlideElements(cubeIndex, slideType) {
     var targetIndex = cubeIndex;
     targetIndex = targetIndex - this.minCubeIndex;
     var numI = parseInt(targetIndex / Math.pow(this.orderNum, 2));
@@ -495,7 +498,7 @@ export default class Rubik {
         angle = (startTouch.clientY - moveTouch.clientY) / width * 180;
         break;
       case 'z|y':
-      case '-x|-y': 
+      case '-x|-y':
         var u = new THREE.Vector2(moveTouch.clientX - startTouch.clientX, startTouch.clientY - moveTouch.clientY);
         var v = new THREE.Vector2(2, -1);
         angle = u.dot(v) / v.length() / width * 180;
@@ -525,7 +528,7 @@ export default class Rubik {
   /**
    * 转动魔方
    */
-  slide(startTouch, moveTouch){
+  slide(startTouch, moveTouch) {
     var angle = this.getSlideAngle(startTouch[0], moveTouch[0], this.slideType);
     this.rotate(this.slideElements, this.slideType, angle * Math.PI / 180);
     this.slideAngle += angle;
@@ -536,7 +539,7 @@ export default class Rubik {
   /**
    * 手动操作结束
    */
-  slideEnd(callback){
+  slideEnd(callback) {
     var angle = this.slideAngle % 90;
     var endAngle = parseInt(this.slideAngle / 90) * 90;
     if (Math.abs(angle) >= this.slideLimitAngle) { //大于等于自动转动阀值
@@ -547,7 +550,7 @@ export default class Rubik {
     var rotateAngle = endAngle - this.slideAngle;
     var rotateSpeed = this.slideAbsAngle / (this.slideCurrentTime - this.slideStartTime); // 手指滑动旋转速度
     var totalTime = Math.abs(rotateAngle) / rotateSpeed;
-    totalTime = totalTime>0?totalTime:50; // 动画时间计算异常则默认为 50 毫秒
+    totalTime = totalTime > 0 ? totalTime : 50; // 动画时间计算异常则默认为 50 毫秒
 
     var self = this;
     requestAnimationFrame(function (timestamp) {

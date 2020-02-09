@@ -4,14 +4,14 @@ export default class Slide {
 
   constructor(main) {
     this.main = main;
-    this.raycaster = new THREE.Raycaster();//射线投射对象
+    this.raycaster = new THREE.Raycaster(); //射线投射对象
     this.reset();
   }
 
   /**
    * 重置
    */
-  reset(){
+  reset() {
     this.endCount = 0;
     this.intersect = null; //射线投射元素
     this.normalize = null; //射线投射平面法向量
@@ -46,9 +46,9 @@ export default class Slide {
   /**
    * 滑动
    */
-  move(event){
-    if(this.startNormalize && this.startNormalize.length > 0){ // 操控魔方
-      if(!this.isSliding){ // 未手动转动
+  move(event) {
+    if (this.startNormalize && this.startNormalize.length > 0) { // 操控魔方
+      if (!this.isSliding) { // 未手动转动
         this.getIntersects(event);
         if (this.intersect.length > 0) { // 操控魔方
           this.isSliding = true; // 开始手动转动
@@ -60,12 +60,12 @@ export default class Slide {
           this.targetRubik.slide(this.startTouch, this.moveTouch); // 使用屏幕坐标判断转动角度
           this.anotherRubik.cloneSlide(this.targetRubik);
         }
-      }else{
+      } else {
         this.moveTouch = event.touches;
         this.targetRubik.slide(this.startTouch, this.moveTouch);
         this.anotherRubik.cloneSlide(this.targetRubik);
       }
-    }else{ // 不操控魔方
+    } else { // 不操控魔方
 
     }
   }
@@ -73,7 +73,7 @@ export default class Slide {
   /**
    * 结束
    */
-  end(){
+  end() {
     var self = this;
     this.isSliding = false;
     this.isRotating = true;
@@ -84,9 +84,9 @@ export default class Slide {
   /**
    * 完成
    */
-  finish(){
+  finish() {
     this.endCount++;
-    if(this.endCount>=2){
+    if (this.endCount >= 2) {
       this.reset();
     }
   }
@@ -94,7 +94,7 @@ export default class Slide {
   /**
    * 获取射线投射元素和射线投射平面法向量
    */
-  getIntersects(event){
+  getIntersects(event) {
     var points = [];
     var vectors = [];
     var events = [];

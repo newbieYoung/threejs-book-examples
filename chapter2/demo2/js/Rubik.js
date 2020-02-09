@@ -74,8 +74,8 @@ export default class Rubik {
     this.orderNum = 3; //阶数
     this.cubeLen = 50; //小方块边长
     this.colors = ['#ff6b02', '#dd422f',
-        '#ffffff', '#fdcd02',
-        '#3d81f7', '#019d53'
+      '#ffffff', '#fdcd02',
+      '#3d81f7', '#019d53'
     ]; //六个面颜色，顺序为右、左、上、下、前、后
   }
 

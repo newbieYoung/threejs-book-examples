@@ -122,7 +122,7 @@ export default class Main {
     var touch = event.touches[0];
 
     var isFunc = false; //是否触发功能按钮
-    if(!this.slide.isRotating && !this.slide.isSliding){//正在转动魔方时不能进行其它操作
+    if (!this.slide.isRotating && !this.slide.isSliding) { //正在转动魔方时不能进行其它操作
       if (this.touchLine.isHover(touch)) {
         this.touchLine.enable();
         isFunc = true;
@@ -141,7 +141,7 @@ export default class Main {
     var touch = event.touches[0];
 
     var isFunc = false; //是否触发功能按钮
-    if(!this.slide.isRotating && !this.slide.isSliding){ //正在转动魔方时不能进行其它操作
+    if (!this.slide.isRotating && !this.slide.isSliding) { //正在转动魔方时不能进行其它操作
       if (this.touchLine.isActive) {
         this.touchLine.move(touch.clientY);
         var frontPercent = touch.clientY / window.innerHeight;
@@ -150,8 +150,8 @@ export default class Main {
         isFunc = true;
       }
     }
-    
-    if(!this.slide.isRotating && !isFunc){ //没有触发功能按钮时，再考虑魔方转动
+
+    if (!this.slide.isRotating && !isFunc) { //没有触发功能按钮时，再考虑魔方转动
       this.slide.move(event)
     }
   }
@@ -160,9 +160,9 @@ export default class Main {
    * 触摸结束
    */
   touchEnd() {
-    if(this.slide.isSliding && !this.slide.isRotating){
+    if (this.slide.isSliding && !this.slide.isRotating) {
       this.slide.end();
-    }else{
+    } else {
       this.touchLine.disable();
     }
   }
