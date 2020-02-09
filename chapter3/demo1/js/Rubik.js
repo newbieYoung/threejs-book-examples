@@ -166,7 +166,7 @@ export default class Rubik {
   }
 
   /**
-   * 根据向量在世界坐标系中的值获取其名称
+   * 根据坐标轴向量在世界坐标系中的值获取其名称
    */
   getWorldName(line){
     for(var i=0;i<this.worldLines.length;i++){
@@ -177,7 +177,7 @@ export default class Rubik {
   }
 
   /**
-   * 根据向量在自身坐标系中的值获取其名称
+   * 根据坐标轴向量在自身坐标系中的值获取其名称
    */
   getLocalName(line){
     for(var i=0;i<this.localLines.length;i++){
