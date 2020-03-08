@@ -99,7 +99,7 @@ export default class Rubik {
     } else {
       this.group.rotateY((270 - 45) / 180 * Math.PI);
     }
-    this.group.rotateOnAxis(new THREE.Vector3(1, 0, 1), 25 / 180 * Math.PI);
+    this.group.rotateOnAxis(new THREE.Vector3(1, 0, 1), 27 / 180 * Math.PI);
     this.main.scene.add(this.group);
   }
 
