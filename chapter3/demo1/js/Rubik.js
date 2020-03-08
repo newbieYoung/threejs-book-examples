@@ -130,7 +130,7 @@ export default class Rubik {
     } else {
       this.group.rotateY((270 - 45) / 180 * Math.PI);
     }
-    this.group.rotateOnAxis(new THREE.Vector3(1, 0, 1), 25 / 180 * Math.PI);
+    this.group.rotateOnAxis(new THREE.Vector3(1, 0, 1), 27 / 180 * Math.PI);
     this.main.scene.add(this.group);
 
     this.getMinCubeIndex();
@@ -228,9 +228,6 @@ export default class Rubik {
     this.slideElements = null;
     this.slideType = null;
     this.slideAngle = null;
-    this.slideAbsAngle = null;
-    this.slideStartTime = null;
-    this.slideCurrentTime = null;
   }
 
   /**
@@ -243,9 +240,6 @@ export default class Rubik {
       var cudeIndex = startPoint[0].object.cubeIndex; // 射线投射小方块序号
       this.slideType = this.getSlideType(axis, startNormalize[0]); //根据转动方向和射线投射平面法向量区分转动情况
       this.slideAngle = 0;
-      this.slideAbsAngle = 0;
-      this.slideStartTime = new Date().getTime();
-      this.slideCurrentTime = new Date().getTime();
 
       if (moveNormalize.length >= 2 && moveNormalize[0].equals(moveNormalize[1])) { //同一表面多指操作
         this.slideElements = this.cubes;
@@ -268,9 +262,6 @@ export default class Rubik {
       }
       this.slideType = rubik.slideType;
       this.slideAngle = rubik.slideAngle;
-      this.slideAbsAngle = rubik.slideAbsAngle;
-      this.slideStartTime = rubik.slideStartTime;
-      this.slideCurrentTime = rubik.slideCurrentTime;
       this.slideElements = [];
       for (var i = 0; i < rubik.slideElements.length; i++) {
         this.slideElements.push(this.getCubeByIndex(rubik.slideElements[i].cubeIndex - rubik.minCubeIndex));
@@ -532,8 +523,6 @@ export default class Rubik {
     var angle = this.getSlideAngle(startTouch[0], moveTouch[0], this.slideType);
     this.rotate(this.slideElements, this.slideType, angle * Math.PI / 180);
     this.slideAngle += angle;
-    this.slideAbsAngle += Math.abs(angle);
-    this.slideCurrentTime = new Date().getTime();
   }
 
   /**
@@ -548,10 +537,7 @@ export default class Rubik {
 
     //开始自动转动动画
     var rotateAngle = endAngle - this.slideAngle;
-    var rotateSpeed = this.slideAbsAngle / (this.slideCurrentTime - this.slideStartTime); // 手指滑动旋转速度
-    var totalTime = Math.abs(rotateAngle) / rotateSpeed;
-    totalTime = totalTime > 0 ? totalTime : 50; // 动画时间计算异常则默认为 50 毫秒
-
+    var totalTime = 80;//自动转动动画时间默认为 80 毫秒
     var self = this;
     requestAnimationFrame(function (timestamp) {
       self.rotateAnimation(self.slideElements, self.slideType, timestamp, 0, 0, function () {
